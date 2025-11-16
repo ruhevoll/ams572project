@@ -38,4 +38,10 @@ df_merged <- inner_join(df_retail, df_futures_monthly, by = "YearMonth") %>%
 model <- lm(retail_price ~ rbob_price, data = df_merged)
 
 # Print the summary to see R-squared, t-statistic, etc.
+# We want to test H_0: beta_1 = 0 vs. H_1 : beta =/= 0
 summary(model)
+
+# Here's a plot of the regression line we can use in the report:
+# Will edit the formatting later so the plot looks nicer for the report. 
+plot(retail_price ~ rbob_price, data = df_merged)
+abline(model, col = "red")

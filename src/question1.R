@@ -5,6 +5,7 @@
 library(readr)
 library(dplyr)
 library(lubridate)
+library(tseries)
 
 # Retail gas prices dataframe
 df_retail <- read_csv("fred_gas_tx.csv") %>%
@@ -45,3 +46,35 @@ summary(model)
 # Will edit the formatting later so the plot looks nicer for the report. 
 plot(retail_price ~ rbob_price, data = df_merged)
 abline(model, col = "red")
+
+# --------------------------------------------------------------------------------------
+
+# PART 2
+
+# --------------------------------------------------------------------------------------
+
+# To justify our OLS model, we want to test if RBOB and retail prices are cointegrated (I think this is part of assuming no-arbitrage). So, in this part
+# we test to see if the linear combination is stationary. 
+
+# We'll test if retail_price - beta_1 * rbob_price is a stationary process N(0, s)
+# Testing H0: Residuals are non-stationary vs. H1: Residuals are stationary
+# For this, we use the Augmented Dickey-Fuller test (to be explained in our report)
+
+model_residuals <- resid(model)
+adf_test_result <- adf.test(model_residuals)
+print(adf_test_result)
+
+# Result of the ADF test: Residuals are stationary (reject Ho w/ p-value 0.01)
+# For the paper, I'm also generating a plot of the residuals to show visually the residuals are stationary
+
+df_merged_with_resid <- df_merged
+df_merged_with_resid$residuals <- model_residuals
+
+plot(df_merged_with_resid$YearMonth, df_merged_with_resid$residuals,
+     type = "l", # 'l' for line plot
+     col = "blue",
+     main = "Residuals",
+     xlab = "Date",
+     ylab = "Residual Value ($)")
+# Add a horizontal line at 0
+abline(h = 0, col = "red", lty = 2, lwd = 2) 

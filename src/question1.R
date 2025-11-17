@@ -1,16 +1,16 @@
 # AMS 572 Project Question 1
 
 
-#IMPORTANT: Be sure to run getwd() and ensure that fred_gas.csv, rbob_futures_hist.csv are present in your working directory before running this program.
+#IMPORTANT: Be sure to run getwd() and ensure that fred_gas_tx.csv, rbob_futures_hist.csv are present in your working directory before running this program.
 library(readr)
 library(dplyr)
 library(lubridate)
 
 # Retail gas prices dataframe
-df_retail <- read_csv("fred_gas.csv") %>%
-  rename(retail_price = APU000074714,
+df_retail <- read_csv("fred_gas_tx.csv") %>%
+  rename(retail_price = APUS37A74714,
          date = observation_date) %>%
-  mutate(date = mdy(date), 
+  mutate(date = ymd(date),
          YearMonth = floor_date(date, "month")) %>%
   select(YearMonth, retail_price)
 

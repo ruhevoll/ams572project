@@ -32,7 +32,7 @@ run_mlr <- function(df, label) {
 }
 
 
-# --- 2. Robust Data Fetching & Processing ---
+# Download the data
 
 start_date <- "2021-01-01"
 native_coins <- c("ETH-USD", "SOL-USD", "XRP-USD", "ADA-USD", "AVAX-USD", 

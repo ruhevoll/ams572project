@@ -1,70 +1,132 @@
 # AMS 572 Project Question 2
 
-# ***Please run question1.R before running this file.***
-#EV : I'm assuming this means the expected value of the model's error
-#So, we want to test if EV = 0, i.e., if the model is unbiased and fairly priced. I think
-#the below code answers that question.
+library(quantmod)
+library(tidyverse)
+library(broom)
 
-# When I run the code, I get a 95% CI of [-0.195088, 0.362646], which contains zero. So, we fail to reject
-# H_0: EV = 0. 
+# Ensure reproducibility
+set.seed(42)
+options(scipen = 999)
 
-# Add model residuals to dataframe
-df_analysis <- df_merged %>%
-  mutate(residuals = model$residuals)
+# Extract interaction term after some data cleaning (making sure each category has enough data)
+run_mlr <- function(df, label) {
+  df_clean <- na.omit(df)
 
-
-# Bootstrap parameters
-
-
-block_size <- 12  # 12-month periods
-n_obs <- nrow(df_analysis)
-n_replications <- 10000 # Sample size 
-
-
-# List of all possible 12-month blocks, added to the dataframe
-all_blocks <- list()
-for (i in 1:(n_obs - block_size + 1)) {
-  all_blocks[[i]] <- df_analysis[i:(i + block_size - 1), ]
-}
-
-
-# Simulation
-
-
-n_total_blocks <- length(all_blocks)
-bootstrap_evs <- numeric(n_replications) # Stores EV for each simulation
-
-for (i in 1:n_replications) {
-  # Randomly sample ONE 12-month block (with replacement)
-  sampled_block <- all_blocks[[sample(1:n_total_blocks, 1, replace = TRUE)]]
+  if (length(levels(factor(df_clean$is_memecoin))) < 2) {
+    warning(paste("Skipping", label, ": Not enough data in one category."))
+    return(NULL)
+  }
   
-  # Calculate the EV (mean residual) for that 12-month period
-  bootstrap_evs[i] <- mean(sampled_block$residuals)
+  model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = df_clean)
+  stats <- tidy(model)
+  
+  target_row <- stats[grep(":", stats$term), ]
+  
+  return(data.frame(
+    Scenario = label,
+    N_Remaining = nrow(df_clean),
+    Interaction_Beta = round(target_row$estimate, 4),
+    Std_Error = round(target_row$std.error, 5),
+    P_Value = format.pval(target_row$p.value, digits = 3)
+  ))
 }
 
 
-# Results
-# We're testing H_0: EV = 0, H_1: EV =/= 0.
+# --- 2. Robust Data Fetching & Processing ---
+
+start_date <- "2021-01-01"
+native_coins <- c("ETH-USD", "SOL-USD", "XRP-USD", "ADA-USD", "AVAX-USD", 
+                  "DOT-USD", "LINK-USD", "POL-USD", "LTC-USD", "ATOM-USD")
+meme_coins <- c("DOGE-USD", "SHIB-USD", "PEPE-USD", "WIF-USD", "BONK-USD", 
+                "FLOKI-USD", "MEME-USD", "ELON-USD", "BABYDOGE-USD", "SAFEMOON-USD")
+btc_ticker <- "BTC-USD"
+all_tickers <- c(btc_ticker, native_coins, meme_coins)
+
+data_env <- new.env()
+valid_tickers <- c()
+
+print("Starting data download...")
+for (ticker in all_tickers) {
+  tryCatch({
+    getSymbols(ticker, src = "yahoo", from = start_date, env = data_env, auto.assign = TRUE)
+    if (nrow(get(ticker, envir = data_env)) > 0) valid_tickers <- c(valid_tickers, ticker)
+  }, error = function(e) {})
+}
+
+# Calculate Returns
+log_returns_list <- list()
+for (ticker in valid_tickers) {
+  d <- get(ticker, envir = data_env)
+  d <- na.omit(d) 
+  try({
+    r <- dailyReturn(Ad(d), type = "log")
+    colnames(r) <- ticker
+    log_returns_list[[ticker]] <- r
+  }, silent = TRUE)
+}
+
+# Merge 
+all_log_returns <- do.call(merge, c(log_returns_list, all = TRUE))
+all_df <- as.data.frame(all_log_returns) %>% rownames_to_column("date") %>% as_tibble()
+colnames(all_df) <- gsub(".Adjusted", "", colnames(all_df))
+
+# Extract BTC returns (Predictor)
+btc_col_name <- grep("BTC", colnames(all_df), value = TRUE)
+if (length(btc_col_name) == 0) stop("Bitcoin data is missing!")
+
+# Rename the BTC column explicitly by name to preserve 'date' column
+btc_data_clean <- all_df %>% 
+  select(date, all_of(btc_col_name)) %>%
+  rename(log_return_btc = all_of(btc_col_name))
+
+# Stack data
+stacked_data <- all_df %>% 
+  select(-all_of(btc_col_name)) %>% 
+  pivot_longer(cols = -date, names_to = "coin", values_to = "log_return_coin")
+
+# Final Baseline Data Creation
+final_data <- stacked_data %>%
+  left_join(btc_data_clean, by = "date") %>%
+  mutate(
+    clean_ticker = gsub("\\.USD|-USD", "", coin),
+    is_memecoin = ifelse(coin %in% meme_coins | clean_ticker %in% gsub("-USD","",meme_coins), 1, 0),
+    is_memecoin = factor(is_memecoin, levels = c(0, 1), labels = c("Native", "Memecoin"))
+  ) %>%
+  na.omit() %>% # Remove NAs
+  filter(is.finite(log_return_coin) & is.finite(log_return_btc)) # Remove Inf
+
+print(paste("Baseline Data Loaded. N =", nrow(final_data)))
 
 
-cat("Bootstrap parameters\n")
-cat("Replications:", n_replications, "\n")
-cat("Block Size:", block_size, "months\n\n")
+# Now we run the analysis
+res_baseline <- run_mlr(final_data, "1. Baseline (Full Data)")
 
-mean_ev <- mean(bootstrap_evs) # Mean EV
-ci_lower <- quantile(bootstrap_evs, 0.025) # Lower CI for EV
-ci_upper <- quantile(bootstrap_evs, 0.975) # Upper CI for EV
 
-cat("Average 12-Month EV:", round(mean_ev, 6), "\n")
-cat("95% EV Confidence Interval: [", round(ci_lower, 6), ", ", round(ci_upper, 6), "]\n\n")
+# MCAR
+# Randomly lose 20% of Memecoin returns
+mcar_data <- final_data
+meme_indices <- which(mcar_data$is_memecoin == "Memecoin")
+remove_indices <- sample(meme_indices, size = 0.2 * length(meme_indices))
+mcar_data$log_return_coin[remove_indices] <- NA
 
-# Histogram of the bootstrap results
-hist(bootstrap_evs, breaks = 50,
-     main = "Bootstrap Distribution of 12-Month EV",
-     xlab = "Mean Residual ($)",
-     col = "lightblue")
-# Add lines for the CI
-abline(v = ci_lower, col = "red", lty = 2, lwd = 2)
-abline(v = ci_upper, col = "red", lty = 2, lwd = 2)
-abline(v = 0, col = "blue", lty = 1, lwd = 2)
-legend("topright", legend = c("95% CI", "EV = 0"), col = c("red", "blue"), lty = c(2, 1))
+res_mcar <- run_mlr(mcar_data, "2. MCAR (Random Memecoin Loss)")
+
+
+# MNAR 
+# Delete 90% of the "very" negative returns (0.05 percentile)
+mnar_data <- final_data
+threshold <- quantile(mnar_data$log_return_coin, 0.05)
+crash_indices <- which(mnar_data$is_memecoin == "Memecoin" & mnar_data$log_return_coin < threshold)
+
+
+delete_indices <- sample(crash_indices, size = 0.9 * length(crash_indices))
+mnar_data$log_return_coin[delete_indices] <- NA
+
+res_mnar <- run_mlr(mnar_data, "3. MNAR (Crash Data Missing)")
+
+# Filter out any NULL results if a scenario failed the factor check
+final_results <- list(res_baseline, res_mcar, res_mnar) %>%
+  bind_rows()
+
+# Final results:
+print(final_results)

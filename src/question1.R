@@ -1,80 +1,77 @@
 # AMS 572 Project Question 1
 
+## !!!! Quantmod may not always work, we should consider downloading the data manually, storing as .csv (for our final submission) so there is no need for an internet connection
+library(quantmod)
+library(tidyverse)
 
-#IMPORTANT: Be sure to run getwd() and ensure that fred_gas_tx.csv, rbob_futures_hist.csv are present in your working directory before running this program.
-library(readr)
-library(dplyr)
-library(lubridate)
-library(tseries)
+# You can set the randomness to a certain "seed" so our sim results are reproducible 
+set.seed(42)
 
-# Retail gas prices dataframe
-df_retail <- read_csv("fred_gas_tx.csv") %>%
-  rename(retail_price = APUS37A74714,
-         date = observation_date) %>%
-  mutate(date = ymd(date),
-         YearMonth = floor_date(date, "month")) %>%
-  select(YearMonth, retail_price)
+# Download data
+start_date <- "2021-01-01"
+tickers <- c("SPY", "BTC-USD")
+data_env <- new.env()
+getSymbols(tickers, src = "yahoo", from = start_date, auto.assign = TRUE, env = data_env)
 
-# Futures data dataframe
-df_futures <- read_csv("rbob_futures_hist.csv") %>%
-  rename(rbob_price = Price,
-         date = Date) %>%
-  mutate(date = mdy(date), 
-         YearMonth = floor_date(date, "month")) %>%
-  select(YearMonth, rbob_price)
 
-# Need to convert RBOB daily into RBOB monthly (rbob_futures_hist.csv is daily data)
-# For this, we just take the monthly mean
-df_futures_monthly <- df_futures %>%
-  group_by(YearMonth) %>%
-  summarise(rbob_price = mean(rbob_price, na.rm = TRUE))
+log_returns <- do.call(merge, lapply(data_env, function(x) dailyReturn(Ad(x), type = "log"))) # Compute log returns
+colnames(log_returns) <- c("spy", "btc")
 
-# Combine data sets together and remove rows which have missing data
-df_merged <- inner_join(df_retail, df_futures_monthly, by = "YearMonth") %>%
-  na.omit() # Remove any rows with missing data
+# Data cleaning below
+clean_data <- as.data.frame(log_returns) %>% 
+  na.omit() %>%
+  filter(is.finite(spy) & is.finite(btc)) # Remove Inf values
 
-# To study the relationship between RBOB and the retail rprice, we model the linear regression
-# retail_price = beta_0 + beta_1 * rbob_price
+print(paste("Baseline N:", nrow(clean_data)))
 
-model <- lm(retail_price ~ rbob_price, data = df_merged)
+# We create a function so we can easily repeat the test 3 times
+analyze_correlation <- function(df, label) {
+  # Handling Method: Complete Case Analysis (na.omit)
+  # We drop the rows where data is missing.
+  df_clean <- na.omit(df)
+  
+  test <- cor.test(df_clean$spy, df_clean$btc, method = "pearson")
+  
+  return(data.frame(
+    Scenario = label,
+    N_Remaining = nrow(df_clean),
+    Correlation = round(test$estimate, 4),
+    P_Value = format.pval(test$p.value, digits = 3)
+  ))
+}
 
-# Print the summary to see R-squared, t-statistic, etc.
-# We want to test H_0: beta_1 = 0 vs. H_1 : beta =/= 0
-summary(model)
 
-# Here's a plot of the regression line we can use in the report:
-# Will edit the formatting later so the plot looks nicer for the report. 
-plot(retail_price ~ rbob_price, data = df_merged)
-abline(model, col = "red")
+# Baseline residuals 
+res_baseline <- analyze_correlation(clean_data, "1. Baseline (Full Data)")
 
-# --------------------------------------------------------------------------------------
 
-# PART 2
+# MCAR 
+# Delete 15% of SPY data, I guess this is like a packet loss in downloading the data from the internet
+# This implies no bias, just loss of sample size
 
-# --------------------------------------------------------------------------------------
+mcar_data <- clean_data
+n_rows <- nrow(mcar_data)
+missing_indices <- sample(1:n_rows, size = 0.15 * n_rows) # Randomly select 15% of indices to set to NA
+mcar_data$spy[missing_indices] <- NA
 
-# To justify our OLS model, we want to test if RBOB and retail prices are cointegrated (I think this is part of assuming no-arbitrage). So, in this part
-# we test to see if the linear combination is stationary. 
+res_mcar <- analyze_correlation(mcar_data, "2. MCAR (Random Deletion)")
 
-# We'll test if retail_price - beta_1 * rbob_price is a stationary process N(0, s)
-# Testing H0: Residuals are non-stationary vs. H1: Residuals are stationary
-# For this, we use the Augmented Dickey-Fuller test (to be explained in our report)
 
-model_residuals <- resid(model)
-adf_test_result <- adf.test(model_residuals)
-print(adf_test_result)
+# MNAR
+# For MNAR, we delete 80% of the bottom 10% of SPY returns
 
-# Result of the ADF test: Residuals are stationary (reject Ho w/ p-value 0.01)
-# For the paper, I'm also generating a plot of the residuals to show visually the residuals are stationary
+mnar_data <- clean_data
+# Identify the bottom 10% of SPY returns (crashes)
+threshold <- quantile(mnar_data$spy, 0.10)
 
-df_merged_with_resid <- df_merged
-df_merged_with_resid$residuals <- model_residuals
+# Delete 80% of the data ONLY if it is below that threshold
+crash_indices <- which(mnar_data$spy < threshold)
+delete_indices <- sample(crash_indices, size = 0.8 * length(crash_indices))
+mnar_data$spy[delete_indices] <- NA
 
-plot(df_merged_with_resid$YearMonth, df_merged_with_resid$residuals,
-     type = "l", # 'l' for line plot
-     col = "blue",
-     main = "Residuals",
-     xlab = "Date",
-     ylab = "Residual Value ($)")
-# Add a horizontal line at 0
-abline(h = 0, col = "red", lty = 2, lwd = 2) 
+res_mnar <- analyze_correlation(mnar_data, "3. MNAR (Missing Low Values)")
+
+
+# Results:
+final_results <- rbind(res_baseline, res_mcar, res_mnar)
+print(final_results)

@@ -1,70 +1,151 @@
 # AMS 572 Project Question 2
 
-# ***Please run question1.R before running this file.***
-#EV : I'm assuming this means the expected value of the model's error
-#So, we want to test if EV = 0, i.e., if the model is unbiased and fairly priced. I think
-#the below code answers that question.
 
-# When I run the code, I get a 95% CI of [-0.195088, 0.362646], which contains zero. So, we fail to reject
-# H_0: EV = 0. 
+library(quantmod)
+library(tidyverse)
+library(broom)
+library(lmtest) 
+library(car)
+library(reshape2) 
 
-# Add model residuals to dataframe
-df_analysis <- df_merged %>%
-  mutate(residuals = model$residuals)
+# Ensure reproducibility
+set.seed(42)
+options(scipen = 999)
 
+# Creates directory in getwd() directory to store plots
+dir.create("project_plots", showWarnings = FALSE)
 
-# Bootstrap parameters
+# Download data
+start_date <- "2023-11-01" 
+native_coins <- c("ETH-USD", "SOL-USD", "XRP-USD", "ADA-USD", "AVAX-USD", "DOT-USD", "LINK-USD", "POL-USD", "LTC-USD", "ATOM-USD")
+meme_coins <- c("DOGE-USD", "SHIB-USD", "PEPE-USD", "WIF-USD", "BONK-USD", "FLOKI-USD", "MEME-USD", "ELON-USD", "BABYDOGE-USD", "SAFEMOON-USD")
+btc_ticker <- "BTC-USD"
+all_tickers <- c(btc_ticker, native_coins, meme_coins)
 
+data_env <- new.env()
+print("Downloading data.")
+for (ticker in all_tickers) { tryCatch({ getSymbols(ticker, src="yahoo", from=start_date, env=data_env, auto.assign=TRUE) }, error=function(e){}) }
 
-block_size <- 12  # 12-month periods
-n_obs <- nrow(df_analysis)
-n_replications <- 10000 # Sample size 
-
-
-# List of all possible 12-month blocks, added to the dataframe
-all_blocks <- list()
-for (i in 1:(n_obs - block_size + 1)) {
-  all_blocks[[i]] <- df_analysis[i:(i + block_size - 1), ]
+log_returns_list <- list()
+for (ticker in all_tickers) {
+  if (exists(ticker, envir = data_env)) {
+    d <- get(ticker, envir = data_env); d <- na.omit(d)
+    if (nrow(d) > 0) {
+      r <- dailyReturn(Ad(d), type = "log"); colnames(r) <- ticker
+      log_returns_list[[ticker]] <- r
+    }
+  }
 }
 
+all_log_returns <- do.call(merge, c(log_returns_list, all = TRUE))
+all_df <- as.data.frame(all_log_returns) %>% rownames_to_column("date") %>% as_tibble() %>% mutate(date=as.Date(date))
+colnames(all_df) <- gsub(".Adjusted", "", colnames(all_df))
 
-# Simulation
+# Filter for Continuity (Max 5% missing, otherwise we throw the coin out)
+limit <- 0.05 * nrow(all_df); keep_cols <- colSums(is.na(all_df)) < limit
+all_df <- all_df[, keep_cols]
+print(paste("Coins kept:", ncol(all_df)-1))
+
+btc_col_name <- grep("BTC", colnames(all_df), value = TRUE)
+if (length(btc_col_name) == 0) stop("BTC missing")
+
+btc_data_clean <- all_df %>% select(date, all_of(btc_col_name)) %>% rename(log_return_btc = all_of(btc_col_name))
+stacked_data <- all_df %>% select(-all_of(btc_col_name)) %>% pivot_longer(cols = -date, names_to = "coin", values_to = "log_return_coin")
+
+final_data <- stacked_data %>%
+  left_join(btc_data_clean, by = "date") %>%
+  mutate(
+    clean_ticker = gsub("\\.USD|-USD", "", coin),
+    is_memecoin = ifelse(coin %in% meme_coins | clean_ticker %in% gsub("-USD","",meme_coins), 1, 0),
+    is_memecoin = factor(is_memecoin, levels = c(0, 1), labels = c("Native", "Memecoin"))
+  ) %>%
+  na.omit() %>% filter(is.finite(log_return_coin) & is.finite(log_return_btc))
+
+print(paste("Final N:", nrow(final_data)))
+
+graphics.off()
+
+growth_data <- all_df %>% pivot_longer(cols = -date, names_to = "coin_ticker", values_to = "log_ret") %>%
+  na.omit() %>% group_by(coin_ticker) %>% arrange(date) %>% mutate(growth_of_1 = exp(cumsum(log_ret))) %>% ungroup() %>%
+  mutate(clean_ticker = gsub("\\.USD|-USD", "", coin_ticker),
+         Category = case_when(coin_ticker == btc_ticker ~ "Bitcoin", coin_ticker %in% meme_coins | clean_ticker %in% gsub("-USD","",meme_coins) ~ "Memecoin", TRUE ~ "Native"))
+
+# Native coins plot
+nat_sub <- growth_data %>% filter(Category %in% c("Bitcoin", "Native"))
+p1 <- ggplot(nat_sub, aes(x=date, y=growth_of_1, color=coin_ticker)) +
+  geom_line(size=0.8) + geom_line(data=filter(nat_sub, coin_ticker==btc_ticker), color="black", size=1.5) +
+  labs(title="1. Native vs BTC Growth", y="Growth of $1") + theme_minimal()
+ggsave("project_plots/q2_1_native_growth.png", plot=p1, width=12, height=7)
+
+# Meme coins plot
+mem_sub <- growth_data %>% filter(Category %in% c("Bitcoin", "Memecoin"))
+p2 <- ggplot(mem_sub, aes(x=date, y=growth_of_1, color=coin_ticker)) +
+  geom_line(size=0.8) + geom_line(data=filter(mem_sub, coin_ticker==btc_ticker), color="black", size=1.5) +
+  labs(title="2. Meme vs BTC Growth", y="Growth of $1") + theme_minimal()
+ggsave("project_plots/q2_2_meme_growth.png", plot=p2, width=12, height=7)
+
+# Scatter plot for native coins vs btc
+p3 <- final_data %>% filter(is_memecoin=="Native") %>%
+  ggplot(aes(x=log_return_btc, y=log_return_coin, color=coin)) + geom_point(alpha=0.3) + geom_smooth(method="lm", color="black") +
+  facet_wrap(~coin, scales="free_y") + labs(title="3. Native Scatter Grid") + theme_bw() + theme(legend.position="none")
+ggsave("project_plots/q2_3_native_grid.png", plot=p3, width=12, height=8)
+
+# Scatter plot for meme coins vs btc
+p4 <- final_data %>% filter(is_memecoin=="Memecoin") %>%
+  ggplot(aes(x=log_return_btc, y=log_return_coin, color=coin)) + geom_point(alpha=0.3) + geom_smooth(method="lm", color="black") +
+  facet_wrap(~coin, scales="free_y") + labs(title="4. Meme Scatter Grid") + theme_bw() + theme(legend.position="none")
+ggsave("project_plots/q2_4_meme_grid.png", plot=p4, width=12, height=8)
+
+# Interaction plots
+p5 <- ggplot(final_data, aes(x=log_return_btc, y=log_return_coin, color=is_memecoin)) +
+  geom_smooth(method="lm", se=TRUE, size=1.5) +
+  labs(title="5. Interaction Effect: Comparing Slopes", subtitle="Purple line slope > Green line slope?", x="BTC Return", y="Coin Return") +
+  theme_minimal()
+ggsave("project_plots/q2_5_interaction_overlay.png", plot=p5, width=8, height=6)
+
+# Correlation heatmap
+cormat <- cor(all_df %>% select(-date)); melted <- melt(cormat)
+p6 <- ggplot(melted, aes(x=Var1, y=Var2, fill=value)) + geom_tile() +
+  scale_fill_gradient2(low="blue", high="red", mid="white", midpoint=0.5, limit=c(0,1)) +
+  theme_minimal() + theme(axis.text.x = element_text(angle=45, hjust=1)) + labs(title="6. Heatmap")
+ggsave("project_plots/q2_6_heatmap.png", plot=p6, width=10, height=8)
+
+# Violin plot
+p7 <- ggplot(final_data, aes(x=is_memecoin, y=log_return_coin, fill=is_memecoin)) +
+  geom_violin(trim=FALSE) + geom_boxplot(width=0.1, fill="white") +
+  labs(title="7. Return Distribution: Native vs Meme", subtitle="Wider violin = More extreme risk") + theme_minimal()
+ggsave("project_plots/q2_7_violin.png", plot=p7, width=8, height=6)
+
+# Assumption diagnostics
+baseline_model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = final_data)
+png("project_plots/q2_8_diagnostics.png", width=1000, height=800)
+par(mfrow = c(2, 2)); plot(baseline_model, which=1); qqPlot(baseline_model); plot(baseline_model, which=3); acf(baseline_model$residuals)
+dev.off()
+
+print("Plots saved.")
 
 
-n_total_blocks <- length(all_blocks)
-bootstrap_evs <- numeric(n_replications) # Stores EV for each simulation
-
-for (i in 1:n_replications) {
-  # Randomly sample ONE 12-month block (with replacement)
-  sampled_block <- all_blocks[[sample(1:n_total_blocks, 1, replace = TRUE)]]
-  
-  # Calculate the EV (mean residual) for that 12-month period
-  bootstrap_evs[i] <- mean(sampled_block$residuals)
+# Extract interaction term after some data cleaning (making sure each category has enough data)
+run_mlr <- function(df, label) {
+  df <- na.omit(df); if (length(levels(factor(df$is_memecoin))) < 2) return(NULL)
+  model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = df)
+  res <- tidy(model) %>% filter(grepl(":", term))
+  return(data.frame(Scenario=label, Beta=round(res$estimate, 4), P=format.pval(res$p.value, digits=3)))
 }
 
+# Now we run the analysis
+res_base <- run_mlr(final_data, "1. Baseline")
 
-# Results
-# We're testing H_0: EV = 0, H_1: EV =/= 0.
 
+# MCAR
+# Randomly lose 20% of Memecoin returns
+mcar <- final_data; meme_i <- which(mcar$is_memecoin=="Memecoin"); mcar$log_return_coin[sample(meme_i, 0.2*length(meme_i))] <- NA
 
-cat("Bootstrap parameters\n")
-cat("Replications:", n_replications, "\n")
-cat("Block Size:", block_size, "months\n\n")
+# MNAR 
+# Delete 90% of the "very" negative returns (0.05 percentile)
+res_mcar <- run_mlr(mcar, "2. MCAR")
+mnar <- final_data; thr <- quantile(mnar$log_return_coin, 0.05); crash <- which(mnar$is_memecoin=="Memecoin" & mnar$log_return_coin < thr)
+mnar$log_return_coin[sample(crash, 0.9*length(crash))] <- NA
+res_mnar <- run_mlr(mnar, "3. MNAR")
 
-mean_ev <- mean(bootstrap_evs) # Mean EV
-ci_lower <- quantile(bootstrap_evs, 0.025) # Lower CI for EV
-ci_upper <- quantile(bootstrap_evs, 0.975) # Upper CI for EV
-
-cat("Average 12-Month EV:", round(mean_ev, 6), "\n")
-cat("95% EV Confidence Interval: [", round(ci_lower, 6), ", ", round(ci_upper, 6), "]\n\n")
-
-# Histogram of the bootstrap results
-hist(bootstrap_evs, breaks = 50,
-     main = "Bootstrap Distribution of 12-Month EV",
-     xlab = "Mean Residual ($)",
-     col = "lightblue")
-# Add lines for the CI
-abline(v = ci_lower, col = "red", lty = 2, lwd = 2)
-abline(v = ci_upper, col = "red", lty = 2, lwd = 2)
-abline(v = 0, col = "blue", lty = 1, lwd = 2)
-legend("topright", legend = c("95% CI", "EV = 0"), col = c("red", "blue"), lty = c(2, 1))
+print(rbind(res_base, res_mcar, res_mnar))

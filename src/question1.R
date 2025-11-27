@@ -1,80 +1,128 @@
 # AMS 572 Project Question 1
 
+## !!!! Quantmod may not always work, we should consider downloading the data manually, storing as .csv (for our final submission) so there is no need for an internet connection
+# (for our final submission)
+library(quantmod)
+library(tidyverse)
+library(gridExtra) 
+library(zoo) 
 
-#IMPORTANT: Be sure to run getwd() and ensure that fred_gas_tx.csv, rbob_futures_hist.csv are present in your working directory before running this program.
-library(readr)
-library(dplyr)
-library(lubridate)
-library(tseries)
+# You can set the randomness to a certain "seed" so our sim results are reproducible 
+set.seed(42)
 
-# Retail gas prices dataframe
-df_retail <- read_csv("fred_gas_tx.csv") %>%
-  rename(retail_price = APUS37A74714,
-         date = observation_date) %>%
-  mutate(date = ymd(date),
-         YearMonth = floor_date(date, "month")) %>%
-  select(YearMonth, retail_price)
+options(scipen = 999)
 
-# Futures data dataframe
-df_futures <- read_csv("rbob_futures_hist.csv") %>%
-  rename(rbob_price = Price,
-         date = Date) %>%
-  mutate(date = mdy(date), 
-         YearMonth = floor_date(date, "month")) %>%
-  select(YearMonth, rbob_price)
+# Creates directory in getwd() directory to store plots
+dir.create("project_plots", showWarnings = FALSE)
 
-# Need to convert RBOB daily into RBOB monthly (rbob_futures_hist.csv is daily data)
-# For this, we just take the monthly mean
-df_futures_monthly <- df_futures %>%
-  group_by(YearMonth) %>%
-  summarise(rbob_price = mean(rbob_price, na.rm = TRUE))
+# Download data
+start_date <- "2023-11-01" 
+tickers <- c("SPY", "BTC-USD")
+data_env <- new.env()
 
-# Combine data sets together and remove rows which have missing data
-df_merged <- inner_join(df_retail, df_futures_monthly, by = "YearMonth") %>%
-  na.omit() # Remove any rows with missing data
+print("Downloading data.")
+tryCatch({
+  getSymbols(tickers, src = "yahoo", from = start_date, auto.assign = TRUE, env = data_env)
+}, error = function(e) {
+  stop("Error downloading data. Bad internet or typo in ticker name.")
+})
 
-# To study the relationship between RBOB and the retail rprice, we model the linear regression
-# retail_price = beta_0 + beta_1 * rbob_price
+log_returns <- do.call(merge, lapply(data_env, function(x) dailyReturn(Ad(x), type = "log")))
+colnames(log_returns) <- c("spy", "btc")
 
-model <- lm(retail_price ~ rbob_price, data = df_merged)
+# Data cleaning below
 
-# Print the summary to see R-squared, t-statistic, etc.
-# We want to test H_0: beta_1 = 0 vs. H_1 : beta =/= 0
-summary(model)
+clean_data <- as.data.frame(log_returns) %>% 
+  rownames_to_column(var = "date") %>%
+  mutate(date = as.Date(date)) %>%
+  na.omit() %>%
+  filter(is.finite(spy) & is.finite(btc)) # Remove Inf values
 
-# Here's a plot of the regression line we can use in the report:
-# Will edit the formatting later so the plot looks nicer for the report. 
-plot(retail_price ~ rbob_price, data = df_merged)
-abline(model, col = "red")
+print(paste("Baseline N:", nrow(clean_data)))
 
-# --------------------------------------------------------------------------------------
 
-# PART 2
+# Data Exploration 
 
-# --------------------------------------------------------------------------------------
+graphics.off()
 
-# To justify our OLS model, we want to test if RBOB and retail prices are cointegrated (I think this is part of assuming no-arbitrage). So, in this part
-# we test to see if the linear combination is stationary. 
+# Prepare Data
+cumulative_data <- clean_data %>%
+  mutate(Growth_SPY = exp(cumsum(spy)), Growth_BTC = exp(cumsum(btc))) %>%
+  pivot_longer(cols = c("Growth_SPY", "Growth_BTC"), names_to = "Asset", values_to = "Value")
 
-# We'll test if retail_price - beta_1 * rbob_price is a stationary process N(0, s)
-# Testing H0: Residuals are non-stationary vs. H1: Residuals are stationary
-# For this, we use the Augmented Dickey-Fuller test (to be explained in our report)
+long_returns <- clean_data %>%
+  pivot_longer(cols = c("spy", "btc"), names_to = "Asset", values_to = "Log_Return")
 
-model_residuals <- resid(model)
-adf_test_result <- adf.test(model_residuals)
-print(adf_test_result)
+# Growth of $1 invested in S&P and BTC
+p1 <- ggplot(cumulative_data, aes(x = date, y = Value, color = Asset)) +
+  geom_line(size = 1) + scale_color_manual(values = c("Growth_BTC" = "orange", "Growth_SPY" = "blue")) +
+  labs(title = "1. Growth of $1", y = "Value ($)") + theme_minimal() + theme(legend.position = "bottom")
+ggsave("project_plots/q1_1_growth.png", plot = p1, width = 10, height = 6)
 
-# Result of the ADF test: Residuals are stationary (reject Ho w/ p-value 0.01)
-# For the paper, I'm also generating a plot of the residuals to show visually the residuals are stationary
+# Daily volatility plots
+p2 <- ggplot(long_returns, aes(x = date, y = Log_Return, color = Asset)) +
+  geom_line(alpha = 0.8) + scale_color_manual(values = c("btc" = "orange", "spy" = "blue")) +
+  labs(title = "2. Daily Volatility", y = "Log Return") + theme_minimal()
+ggsave("project_plots/q1_2_volatility.png", plot = p2, width = 10, height = 6)
 
-df_merged_with_resid <- df_merged
-df_merged_with_resid$residuals <- model_residuals
+# Correlation scatter plots
+p3 <- ggplot(clean_data, aes(x = spy, y = btc)) +
+  geom_point(alpha = 0.3, color = "darkblue") + geom_smooth(method = "lm", color = "red") +
+  labs(title = "3. Correlation Scatter", x = "SPY", y = "BTC") + theme_minimal()
+ggsave("project_plots/q1_3_scatter.png", plot = p3, width = 8, height = 6)
 
-plot(df_merged_with_resid$YearMonth, df_merged_with_resid$residuals,
-     type = "l", # 'l' for line plot
-     col = "blue",
-     main = "Residuals",
-     xlab = "Date",
-     ylab = "Residual Value ($)")
-# Add a horizontal line at 0
-abline(h = 0, col = "red", lty = 2, lwd = 2) 
+# Rolling correlation plots
+clean_data$rolling_corr <- rollapply(clean_data[,c("spy", "btc")], width = 30,
+                                     function(x) cor(x[,1], x[,2]), by.column = FALSE, fill = NA)
+p4 <- ggplot(clean_data, aes(x = date, y = rolling_corr)) +
+  geom_line(color = "purple", size = 1) + geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "4. Rolling 30-Day Correlation", y = "Correlation") + theme_minimal()
+ggsave("project_plots/q1_4_rolling.png", plot = p4, width = 10, height = 6)
+
+# Return distribution boxplot
+p5 <- ggplot(long_returns, aes(x = Asset, y = Log_Return, fill = Asset)) +
+  geom_boxplot() +
+  labs(title = "5. Distribution of Returns", subtitle = "Compare spread/outliers") + theme_minimal()
+ggsave("project_plots/q1_5_boxplot.png", plot = p5, width = 8, height = 6)
+
+# Diagnostic plots (for checking normality assumptions)
+png("project_plots/q1_6_diagnostics.png", width = 1000, height = 800)
+par(mfrow = c(2, 2))
+plot(clean_data$spy, clean_data$btc, main = "Linearity", pch=20, col=rgb(0,0,0,0.2)); abline(lm(btc~spy, clean_data), col="red")
+qqnorm(clean_data$spy, main = "Q-Q SPY"); qqline(clean_data$spy, col="red")
+qqnorm(clean_data$btc, main = "Q-Q BTC"); qqline(clean_data$btc, col="red")
+acf(clean_data$btc, main = "ACF BTC")
+dev.off()
+par(mfrow = c(1, 1))
+
+print("Plots saved.")
+
+# We create a function so we can easily repeat the test 3 times
+analyze_correlation <- function(df, label) {
+  # Handling Method: Complete Case Analysis (na.omit)
+  # We drop the rows where data is missing.
+  df_clean <- na.omit(df)
+  test <- cor.test(df_clean$spy, df_clean$btc, method = "pearson")
+  return(data.frame(Scenario = label, N = nrow(df_clean), Correlation = round(test$estimate, 4), P_Value = format.pval(test$p.value, digits=3)))
+}
+
+# Baseline residuals
+res_base <- analyze_correlation(clean_data, "1. Baseline")
+
+# MCAR 
+# Delete 15% of SPY data, I guess this is like a packet loss in downloading the data from the internet
+# This implies no bias, just loss of sample size
+
+
+mcar_data <- clean_data; mcar_data$spy[sample(nrow(mcar_data), 0.15*nrow(mcar_data))] <- NA
+res_mcar <- analyze_correlation(mcar_data, "2. MCAR")
+
+# MNAR
+# For MNAR, we delete 80% of the bottom 10% of SPY returns
+
+# Identify the bottom 10% of SPY returns (crashes)
+mnar_data <- clean_data; thresh <- quantile(mnar_data$spy, 0.10, na.rm=TRUE)
+mnar_data$spy[which(mnar_data$spy < thresh)[sample(sum(mnar_data$spy < thresh, na.rm=TRUE), 0.8*sum(mnar_data$spy < thresh, na.rm=TRUE))]] <- NA
+res_mnar <- analyze_correlation(mnar_data, "3. MNAR")
+
+print(rbind(res_base, res_mcar, res_mnar))

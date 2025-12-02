@@ -47,3 +47,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+report/report.aux
+report/report.fdb_latexmk
+report/report.aux
+report/report.fls
+report/report.synctex.gz
+report/report.log
+report/report.aux

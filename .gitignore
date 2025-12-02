@@ -54,3 +54,6 @@ report/report.fls
 report/report.synctex.gz
 report/report.log
 report/report.aux
+*.gz
+*.aux
+*.log

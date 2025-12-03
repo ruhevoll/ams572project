@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.12.2)  2 DEC 2025 13:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.12.2)  3 DEC 2025 15:27
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/dsch/Documents/GitHub/ams572project/report/report.tex
-(/home/dsch/Documents/GitHub/ams572project/report/report.tex
+**report.tex
+(./report.tex
 LaTeX2e <2022-11-01> patch level 1
-L3 programming layer <2023-02-22> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+L3 programming layer <2023-02-22>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
 File: size12.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
@@ -22,36 +22,52 @@ File: size12.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
-) (/usr/share/texlive/texmf-dist/tex/latex/newtx/newtxtext.sty
-Package: newtxtext 2022/02/28 v1.71(Michael Sharpe) latex and unicode latex support for TeXGyreTermesX
- `newtxtext' v1.71, 2022/02/28 Text macros taking advantage of TeXGyre Termes and its extensions (msharpe) (/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/newtxtext.sty
+Package: newtxtext 2022/02/28 v1.71(Michael Sharpe) latex and unicode latex sup
+port for TeXGyreTermesX
+
+`newtxtext' v1.71, 2022/02/28 Text macros taking advantage of TeXGyre Termes an
+d its extensions (msharpe)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
-) (/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
- (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
 \XKV@toks=\toks16
 \XKV@tempa@toks=\toks17
- (/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex))
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex))
 \XKV@depth=\count193
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)) (/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+))
+(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count194
-) (/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
-) (/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty (/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.tex
+)
+(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xstring/xstring.tex
 \integerpart=\count195
 \decimalpart=\count196
 )
 Package: xstring 2023/01/14 v1.85 String manipulations (CT)
-) (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
-) (/usr/share/texlive/texmf-dist/tex/latex/carlisle/scalefnt.sty)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/carlisle/scalefnt.sty)
 LaTeX Font Info:    Setting ntxLF sub-encoding to TS1/0 on input line 21.
 LaTeX Font Info:    Setting ntxTLF sub-encoding to TS1/0 on input line 21.
 LaTeX Font Info:    Setting ntxOsF sub-encoding to TS1/0 on input line 21.
 LaTeX Font Info:    Setting ntxTOsF sub-encoding to TS1/0 on input line 21.
- (/usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex)
+
+(/usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex)
 \ntx@tmpcnta=\count197
 \ntx@cnt=\count198
 
@@ -70,7 +86,8 @@ LaTeX Info: Redefining \textssc on input line 48.
 LaTeX Info: Redefining \textulc on input line 49.
 )
 LaTeX Info: Redefining \oldstylenums on input line 657.
-) (/usr/share/texlive/texmf-dist/tex/latex/amscls/amsthm.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks18
 \thm@bodyfont=\toks19
@@ -81,9 +98,11 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@postskip=\skip51
 \thm@headsep=\skip52
 \dth@everypar=\toks23
-) (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks24
 \symAMSa=\mathgroup4
@@ -91,21 +110,25 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2022/04/08 v2.17n AMS math features
 \@mathmargin=\skip53
 
 For additional information on amsmath, use the `?' option.
 (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2021/08/26 v2.01 AMS text
- (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks25
 \ex@=\dimen141
-)) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen142
-) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count199
@@ -155,17 +178,23 @@ LaTeX Info: Redefining \Relbar on input line 971.
 \mathdisplay@stack=\toks29
 LaTeX Info: Redefining \[ on input line 2953.
 LaTeX Info: Redefining \] on input line 2954.
-) (/usr/share/texlive/texmf-dist/tex/latex/newtx/newtxmath.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/newtxmath.sty
 Package: newtxmath 2022/01/16 v1.71
- `newtxmath' v1.71, 2022/01/16 Math macros based originally on txfonts (msharpe) (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
+
+`newtxmath' v1.71, 2022/01/16 Math macros based originally on txfonts (msharpe)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
-) (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
+)
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/centernot.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/centernot.sty
 Package: centernot 2016/05/16 v1.4 Centers the not symbol horizontally (HO)
 )
 \tx@cntz=\count277
- (/usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex)
+
+(/usr/share/texlive/texmf-dist/tex/generic/kastrup/binhex.tex)
 \tx@Isdigit=\count278
 \tx@IsAlNum=\count279
 \tx@tA=\toks30
@@ -240,17 +269,20 @@ Now handling font encoding LMX ...
 ... no UTF-8 mapping file for font encoding LMX
 LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 628.
 LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 628.
+(Font)              `largesymbols' in the math version `normal' on input line 6
+28.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 628.
 LaTeX Font Info:    Encoding `OMX' has changed to `LMX' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 628.
+(Font)              `largesymbols' in the math version `bold' on input line 628
+.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/cmex/m/n --> LMX/ntxexx/m/n on input line 628.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  LMX/ntxexx/m/n --> LMX/ntxexx/b/n on input line 629.
 \symlargesymbolsTXA=\mathgroup9
 LaTeX Font Info:    Overwriting symbol font `largesymbolsTXA' in version `bold'
+
 (Font)                  U/ntxexa/m/n --> U/ntxexa/b/n on input line 643.
 \tx@sbptoks=\toks32
 LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 866.
@@ -270,110 +302,218 @@ LaTeX Info: Redefining \Bbbk on input line 2810.
 LaTeX Info: Redefining \not on input line 2959.
 LaTeX Info: Redefining \textsquare on input line 2989.
 LaTeX Info: Redefining \openbox on input line 2991.
+) (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd
+\Gm@cnth=\count280
+\Gm@cntv=\count281
+\c@Gm@tempcnt=\count282
+\Gm@bindingoffset=\dimen150
+\Gm@wd@mp=\dimen151
+\Gm@odd@mp=\dimen152
+\Gm@even@mp=\dimen153
+\Gm@layoutwidth=\dimen154
+\Gm@layoutheight=\dimen155
+\Gm@layouthoffset=\dimen156
+\Gm@layoutvoffset=\dimen157
+\Gm@dimlist=\toks33
+)
+(/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+)
+LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input lin
+e 10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd
 File: ot1ntxtlf.fd 2021/05/24 v1.0 font definition file for OT1/ntx/tlf
 )
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+(Font)              scaled to size 12.0pt on input line 10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count280
+\l__color_backend_stack_int=\count283
 \l__pdf_internal_box=\box53
-) (./report.aux)
+)
+(./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 7.
-LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line 7.
+LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 10.
+LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line
+ 10.
  (/usr/share/texlive/texmf-dist/tex/latex/newtx/omlntxmi.fd
 File: omlntxmi.fd 2015/08/25 Fontinst v1.933 font definitions for OML/ntxmi.
 )
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 7.
-LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxexa.fd
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 10.
+LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 
+10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxexa.fd
 File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
 )
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 7.
-LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/lmsntxsy.fd
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 10.
+LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line
+ 10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/lmsntxsy.fd
 File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
 )
-LaTeX Font Info:    ... okay on input line 7.
-LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 7.
-LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input line 7.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/lmxntxexx.fd
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 10.
+LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input lin
+e 10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/lmxntxexx.fd
 File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
 )
-LaTeX Font Info:    ... okay on input line 7.
-\c@mv@tabular=\count281
-\c@mv@boldtabular=\count282
-LaTeX Info: Command `\dddot' is already robust on input line 7.
-LaTeX Info: Command `\ddddot' is already robust on input line 7.
+LaTeX Font Info:    ... okay on input line 10.
+\c@mv@tabular=\count284
+\c@mv@boldtabular=\count285
+LaTeX Info: Command `\dddot' is already robust on input line 10.
+LaTeX Info: Command `\ddddot' is already robust on input line 10.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 20.74pt on input line 8.
+(Font)              scaled to size 20.74pt on input line 11.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
+(Font)              scaled to size 20.74pt on input line 11.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 14.4pt on input line 8.
-LaTeX Font Info:    Trying to load font information for OT1+minntx on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1minntx.fd
+(Font)              scaled to size 14.4pt on input line 11.
+LaTeX Font Info:    Trying to load font information for OT1+minntx on input lin
+e 11.
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1minntx.fd
 File: ot1minntx.fd 2022/01/20 v1.0 font definition file for OT1/minntx
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+LaTeX Font Info:    Trying to load font information for U+msa on input line 11.
+
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+LaTeX Font Info:    Trying to load font information for U+msb on input line 11.
+
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd
+LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 
+11.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2018/04/14 Fontinst v1.933 font definitions for U/ntxmia.
 )
-LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsym.fd
+LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 
+11.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2015/03/20 Fontinst v1.933 font definitions for U/ntxsym.
 )
-LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 8.
- (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsyc.fd
+LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 
+11.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
 )
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 17.28pt on input line 9.
+(Font)              scaled to size 17.28pt on input line 12.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 17.28pt on input line 9.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 14.4pt on input line 11.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 12.0pt on input line 15.
+(Font)              scaled to size 17.28pt on input line 12.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}] (./report.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-di
+st/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}]
+LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
+(Font)              scaled to size 14.4pt on input line 44.
+ [2]
+LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
+(Font)              scaled to size 12.0pt on input line 70.
+LaTeX Font Info:    Trying to load font information for OT1+ntxsups on input li
+ne 70.
+
+(/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1ntxsups.fd
+File: ot1ntxsups.fd 2015/01/17 v1.0
+)
+LaTeX Font Info:    Font shape `OT1/ntxsups/m/n' will be
+(Font)              scaled to size 12.0pt on input line 70.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
+(Font)              scaled to size 10.0pt on input line 70.
+LaTeX Font Info:    Font shape `OT1/ntxsups/m/n' will be
+(Font)              scaled to size 10.0pt on input line 70.
+ [3{/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntxsups_ot1.enc}] (./re
+port.bbl) [4]
+(./report.aux) )
+(\end occurred inside a group at level 1)
+
+### semi simple group (level 1) entered at line 6 (\begingroup)
+### bottom level 
 Here is how much of TeX's memory you used:
- 5304 strings out of 476041
- 73638 string characters out of 5793174
- 1852388 words of memory out of 6000000
- 25685 multiletter control sequences out of 15000+600000
- 536827 words of font info for 81 fonts, out of 8000000 for 9000
+ 5986 strings out of 476041
+ 84407 string characters out of 5793174
+ 1856388 words of memory out of 6000000
+ 26328 multiletter control sequences out of 15000+600000
+ 571519 words of font info for 161 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 56i,6n,62p,361b,230s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmr.pfb>
-Output written on report.pdf (1 page, 68253 bytes).
+ 56i,6n,80p,952b,539s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/newtx/NewTXMI
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ntxsups-Regular.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txexs.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/txfonts/txsyb.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/newtx/txsys.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/newtx/ztmb.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmr.
+pfb>
+Output written on report.pdf (4 pages, 115111 bytes).
 PDF statistics:
- 19 PDF objects out of 1000 (max. 8388607)
- 11 compressed objects within 1 object stream
+ 59 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

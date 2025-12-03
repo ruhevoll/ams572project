@@ -1,25 +1,89 @@
 \documentclass[12pt]{article}
 
 \usepackage{newtxtext, amsthm, amssymb, amsmath, newtxmath}
-\title{AMS 572 Project Report}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\doublespace
+\title{\textbf{AMS 572 Project Report}}
 \author{Benjamin Minkin, Marcus Minutello, Jacob White}
 \date{Due: December 5, 2025 \@ 10:00am}
 \begin{document} 
 	\maketitle
 	\section{Introduction}
-	\subsection{Background}
+	Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
+	investment asset. This digital currency is held by major heads funds[1], Fortune 500 companies[2],
+	and national banks[3]. Additionally, Bitcoin has gained acceptance as an everyday currency with many
+	retailers now accepting it as payment. Most incredibly, Bitcoin was even declared a legal-tender currency
+	of El Salvador in September 2021[4]. As Bitcoin has become more accepted, retail investors calmored to buy 
+	and trade this new asset. Today, you can hold Bitcoin in digital wallets, investment and retirement accounts[5],
+	as well as purchasing shares of Bitcoin-focused exchange-traded funds (ETFs)[6].
+	
+	Moreover, the meteoric rise in price per bitcoin has spawned a new class of digital assets called cryptocurrencies. 
+	Aside from Bitcoin, these cryptocurrencies follow one of two paradigms. The first paradigm describes coins that focus 
+	on improving some aspects of the technology such as energy efficiency, transaction speed, or added utility. These coins 
+	utilize their own blockchain networking structure leading to their name as “native coins”. The second type of coin attempts 
+	to capitalize on the speculation and excitement around Bitcoin’s price by creating eye-catching imitations. These coins use
+	existing blockchain networks and are often themed around a specific internet trend or personality to garner attention. In 
+	online circles, these types of coins have earned the title of “meme coin” as they make no novel improvements to the 
+	underlying structure.  
+	
+	Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, does Bitcoin’s 
+	price follow stock market movements? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with 
+	traditional investments that it has lost its novelty? The answer to this question has serious ramifications for portfolio 
+	allocations. If Bitcoin’s movements are unrelated to the stock market, it can be a valuable tool to diversify portfolios 
+	and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as an investment asset 
+	mirrors similar stocks in the digital sphere. 
+
+	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying 
+	technology powering digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel 
+	the motivation fueling the cryptocurrency boom. This is because of the dual purpose of currency, being a store-of-value and a mode 
+	of facilitating transactions. Both of these purposes benefit from the price being predictable and stable. If the meme coins are more 
+	sensitive to changes in Bitcoin, it highlights their use as a speculative asset. Likewise, this result highlights the utility of native
+	coins and investors bet on the underlying technological improvements. 
+
 	\subsection{Questions of Interest}
+	
+	Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, does Bitcoin’s price follow stock market
+	movements? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with traditional investments that it has lost its novelty? 
+	The answer to this question has serious ramifications for portfolio allocations. If Bitcoin’s movements are unrelated to the stock market, it can 
+	be a valuable tool to diversify portfolios and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as 
+	an investment asset mirrors similar stocks in the digital sphere. 
+	
+	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying technology powering
+	digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel the motivation fueling the
+	cryptocurrency boom. This is because of the dual purpose of currency, being a store-of-value and a mode of facilitating transactions. 
+	Both of these purposes benefit from the price being predictable and stable. If the meme coins are more sensitive to changes in Bitcoin, 
+	it highlights their use as a speculative asset. Likewise, this result highlights the utility of native coins and investors bet on the 
+	underlying technological improvements. 
+	
 	\subsection{Description of the Data}
-	\section{Methods}
-		\subsection*{Question 1}
-		\subsection*{Question 2}
-	\section{Results and Discussion}
-		\subsection*{Question 1}
-			\subsubsection{Regression Results \& Interpretation}
-			\subsubsection{Effect of Missing Values}
-		\subsection*{Question 2}
-			\subsubsection{Test Results \& Discussion}
-			\subsubsection{Effect of Missing Values}
+	
+	The data for this analysis was imported from Yahoo Finance using the quantmod r package. This data contains the date, daily opening price, daily high 
+	price, daily closing price, and daily volume for each asset specified. The range of dates collected for this analysis ranges from November 1, 2023
+	to November 18, 2025. This data was then transformed to isolate the log-daily returns over this time period. Additionally, a dummy variable was
+	added to categorize between the native coins and the meme coins. When combining the SPY and BTC data, non-trading days such as holidays and
+	weekends were removed. 
+	
+	\section{Background}
+	In this section, we review some basic mathematical machinery with regard to financial time series. 
+	\subsection{Introduction to Financial Time Series}
+	By a time series we mean a sequence of observations taken at regular time intervals. More formally, a \textbf{time series}  is simply a sequence $\{x_t\}_{t \in T}$ of real numbers $x_t$, for $T = \{t_0, t_1, t_2, t_3, \dots, t_n\}$ some finite indexing set of time increments over a certain period\footnote{In the case of real-world data, this indexing set is finite. However, generally we can make $T$ to be any finite, countably infinite, or even uncountably infinite subset of $\mathbb{R}$ (the real numbers).}. In the case of finance, our sequence $\{x_t\}_{t \in T}$ (which we may write equivalently as $x_t$ for brevity, where the time index $T$ is implicitly understood) represents the evolution of the price of a particular asset over time.  To our notation consistent, we denote the price of a particular asset at the end of a trading day $t$ by $P_t$ . 
+	
+	
+	When we study the evolution of an asset price, it is often useful to measure changes in price by computing the \textbf{daily log return} time series $r_t$ of $P_t$, which is given by the formula 
+		\begin{equation}
+			\label{eq:logret}
+			r_t = \log\left(\frac{P_t}{P_{t - 1}}\right)
+		\end{equation} 
+	\subsection{Correlation and Time Series}
+	\subsection{Linear Regression on Financial Time Series}
+	\subsection{Autocorrelation, Heteroskedasticity, and Robust Inference}
+	
+	\section{Question 1}
+	\section{Question 2}
+
 	\section{Conclusion}
-	\section{References}
+	
+	\bibliographystyle{plain} 
+	\bibliography{references}
 \end{document}

@@ -110,6 +110,44 @@
 	In practice, particularly when dealing with financial data, the assumptions 1 and 2 are often not well satisfied. For starters, the log return of any particular stock often \textit{does not} follow a normal distribution, which violates assumption 2. Furthermore, the development of the price of a stock may not be generally independent across time. However, for purposes of simplification, it is often assumed to be the case in the theory financial modeling that stock prices are independently and identically normally distributed. 
  	
 	\subsection{Linear Regression on Financial Time Series}
+	For \textbf{Question 2}, we are interested in whether or not the price of memecoins track closer to the price of Bitcoin versus other, more serious nativecoins. We will study this question by performing a linear regression analysis. Let 
+		\begin{equation*}
+			\mathrm{Memecoin}_i = \begin{cases}1 & \text{if coin } i \text{ is a memecoin}, \\ 0 & \text{if coin } i \text{ is a nativecoin}.\end{cases}
+		\end{equation*}
+	We then fit the model 
+	\begin{equation}
+		\label{eq:question2linreg}
+		\mathrm{Return}_{i,t} = \beta_0 + \beta_1 \mathrm{BTC}_t + \beta_2 \mathrm{Memecoin}_{i,t} + \beta_3 (\mathrm{BTC}_t \times \mathrm{Memecoin}_{i,t}) + \varepsilon_{i,t}. 
+	\end{equation}
+	We can interpret the coefficients in \autoref{eq:question2linreg} in the following way: $\beta_1$ can be viewed as the sensitivity of native coins to changes in the price of Bitcoin (notice that when $\mathrm{Memecoin}_i = 0$ for a nativecoin $i$, the slope of \autoref{eq:question2linreg} is simply $\beta_1$). Moreover, $\beta_3$ can be viewed as the \textit{difference} in sensitivity for memecoins versus nativecoins, since when $\mathrm{Memecoin}_i = 1$ for a memecoin, the slope is $\beta_1 + \beta_3$. With this in mind, if it turns out that $\beta_3 > 0$, we have that memecoins are more sensitive to the price of Bitcoin than nativecoins are. 
+	
+	
+	In order to apply the linear regression analysis as in \autoref{eq:question2linreg}, which has the general form $Y = \beta_0 + \beta_1 X + \beta_2 Z + \beta_3 XZ$, we require the following conditions to be satisfied by $X, Z,$ and the interaction term $XZ$: 
+		\begin{enumerate}
+			\item The conditional expectation of $Y$ should be linear in the parameters, i.e., $\mathbb{E}[Y \mid X, Z] = \beta_0 + \beta_1 X + \beta_2 Z + \beta_3 XZ$, 
+			\item the regressors $X$, $Z$, and $XZ$ should be uncorrelated with the error term,
+			\item no regressor is a linear combination of the others,
+			\item $\mathrm{Var}(\varepsilon \mid X, Z)$ is constant (this is called \textbf{homoskedasticity}), 
+			\item errors are uncorrelated across observations (this means that there is \textbf{no autocorrelation}), and
+			\item $\varepsilon$ is normally distributed. 
+		\end{enumerate}
+	Again, in the case of financial time series, assumptions 4 and 5 are often not satisfied. As a result, if we were to perform a standard linear regression analysis, we would not be able to trust our OLS standard errors and their associated $p$-values. To remedy this fact, we instead compute a different flavor of standard errors, called \textbf{heteroskedasticity and autocorrelation consistent standard errors}, which will provide us with valid inference results even when assumptions 4 and 5 are not satisfied.
+	
+	To motivate and illustrate this alternative approach, consider the standard linear model $$\mathbf{Y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}$$ for $\mathbf{Y} \in \mathbb{R}^n$ a vector of responses, $\mathbf{X} \in \mathbb{R}^{n \times p}$ a design matrix, where the $i$th row is denoted $X_i$, $\boldsymbol{\beta} \in \mathbb{R}^p$ is the vector of parameters, and $\boldsymbol{\varepsilon} \in \mathbb{R}^n$ is the error vector, where under classical OLS assumptions we assume $\mathrm{Var}(\varepsilon_i) = \sigma^2$, where $\sigma$ is a \textbf{constant}, and $\mathrm{Cov}(\varepsilon_i, \varepsilon_j) = 0$ for $i \neq j$. We already know that the standard OLS estimator of $\boldsymbol \beta$ is given by $$\widehat{\boldsymbol \beta} = (X^T X)^{-1} X^T \mathbf{Y}$$ which is unbiased provided $\mathbb[E](\boldsymbol{\varepsilon}) = \mathbf{0}$ and the errors are independent of $\mathbf{X}$. If we want to perform the hypothesis test $$H_0 : \beta_j = 0,$$ and compute a $p$-value, we compute the test statistic 
+	\begin{equation}
+		\label{eq:mlsTest}
+		t_j = \frac{\widehat{\beta_j}}{\mathrm{SE}(\widehat{\beta}_j)} = \frac{\widehat{\beta_j}}{\sqrt{\widehat{\mathrm{Var}}(\widehat{\boldsymbol \beta})}} 
+	\end{equation} 
+	where $\widehat{\mathrm{Var}}(\widehat{\boldsymbol \beta}) = \widehat{\sigma}^2 (X^T X)^{-1}$ is the sample variance of the OLS estimator. However, the problem is, this formula for the sample variance is \textit{only} valid when the assumption that the errors are IID holds. In the case where this does not hold (in particular, in the case where the errors are correlated and heteroskedastic), we need to use a different estimator of the covariance matrix of $\widehat{\boldsymbol \beta}$, called the \textbf{\textit{Newey-West estimator}}.
+	
+	
+	The Newey-West estimator of the covariance matrix of $\widehat{\boldsymbol \beta}$ is given by
+		\begin{eqnarray}
+			\label{eq:neweyWest}
+			\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta}) = (X^T X)^{-1} \left(X^T \widehat{\Omega}_{\mathrm{NW}}X\right)(X^T X)^{-1},
+		\end{eqnarray}
+		where
+	
 	\subsection{Autocorrelation, Heteroskedasticity, and Robust Inference}
 	
 	\section{Question 1}

@@ -3,7 +3,10 @@
 \usepackage{newtxtext, amsthm, amssymb, amsmath, newtxmath}
 \usepackage[margin=1in]{geometry}
 \usepackage{setspace}
+\usepackage{float}
+\usepackage{hyperref}
 \doublespace
+\usepackage{graphicx}
 \title{\textbf{AMS 572 Project Report}}
 \author{Benjamin Minkin, Marcus Minutello, Jacob White}
 \date{Due: December 5, 2025 \@ 10:00am}
@@ -70,12 +73,42 @@
 	By a time series we mean a sequence of observations taken at regular time intervals. More formally, a \textbf{time series}  is simply a sequence $\{x_t\}_{t \in T}$ of real numbers $x_t$, for $T = \{t_0, t_1, t_2, t_3, \dots, t_n\}$ some finite indexing set of time increments over a certain period\footnote{In the case of real-world data, this indexing set is finite. However, generally we can make $T$ to be any finite, countably infinite, or even uncountably infinite subset of $\mathbb{R}$ (the real numbers).}. In the case of finance, our sequence $\{x_t\}_{t \in T}$ (which we may write equivalently as $x_t$ for brevity, where the time index $T$ is implicitly understood) represents the evolution of the price of a particular asset over time.  To our notation consistent, we denote the price of a particular asset at the end of a trading day $t$ by $P_t$ . 
 	
 	
-	When we study the evolution of an asset price, it is often useful to measure changes in price by computing the \textbf{daily log return} time series $r_t$ of $P_t$, which is given by the formula 
+	When we study the evolution of an asset price, it is often useful to measure changes in price by computing the daily \textbf{rate of return} $\frac{P_t}{P_{t - 1}}$ or, more preferably, the \textbf{daily log return} time series $r_t$ of $P_t$, which is given by the formula 
 		\begin{equation}
 			\label{eq:logret}
-			r_t = \log\left(\frac{P_t}{P_{t - 1}}\right)
+			r_t = \log\left(\frac{P_t}{P_{t - 1}}\right).
 		\end{equation} 
-	\subsection{Correlation and Time Series}
+	
+	An example of a financial time series (i.e., the daily return of the S\&P 500 stock market index), its daily return \& daily log return time series is shown in \autoref{fig:SPYdaily} below. 
+	\begin{figure}[H]
+		\centering 
+		\includegraphics[scale = 0.5]{572_SPY_daily.png}
+		\caption{S\&P 500 Daily Returns, Daily Log Returns, and Closing Prices between Nov 1, 2020 and Nov 1, 2025.}
+		\label{fig:SPYdaily}
+	\end{figure}
+	In what follows, we will use analyze the price of different cryptocurrencies and financial assets using log returns as in \autoref{eq:logret}. 
+	\subsection{Inference for the Correlation between Time Series}
+	Recall that, if $X$ and $Y$ are continuous random variables with $E[X] = \mu_X$ and $E[Y] = \mu_Y$, variances $\mathrm{Var}(X) = \sigma_X^2$ and $\mathrm{Var}(Y) = \sigma_Y^2$, then their \textbf{covariance} is given by the formula $$\mathrm{Cov}(X, Y) = \mathbb{E}[(X - \mu_X)(Y - \mu_Y)]$$ and subsequently their \textbf{correlation} is given by $$\rho_{XY} = \frac{\mathrm{Cov}(X, Y)}{\sigma_X \sigma_Y}.$$ How can we define the same notion of correlation for time series to asses a relationship between them?  It turns out, if we are given two time series $\{x_t\}_{t = 1}^N$ and $\{y_t\}_{t = 1}^N$, we can use the \textbf{Pearson correlation coefficient}, defined in \autoref{eq:pearson} below as
+		\begin{equation}
+			\label{eq:pearson}
+			\hat{\rho} = \frac{\sum_{t  = 1}^n (x_t - \overline{x})(y_t - \overline{y})}{\sqrt{\sum_{n = 1}^n (x_t - \overline{x})^2} \sqrt{\sum_{t = 1}^n (y_t - \overline y)^2}},
+		\end{equation}
+	where $\overline{x}$ and $\overline{y}$ denote the sample means of $\{x_t\}_{t = 1}^n$, $\{y_t\}_{t = 1}^n$, respectively. I.e., $$\overline{x} = \frac{1}{n} \sum_{t = 1}^n x_t, \qquad \overline{y} = \frac{1}{n} \sum_{t = 1}^n y_t.$$
+	When studying the relationship between two time series $x_t$ and $y_t$, we can use the Pearson correlation coefficient in \autoref{eq:pearson} to construct a hypothesis test of $H_0 : \hat{\rho} = 0$ vs. $H_1: \hat{\rho} \neq 0$ under the following assumptions:
+		\begin{enumerate}
+			\item The pairs $(x_t, y_t)$ are independent across time: for $t_1 \in T$ and $t_2 \in T$, $(x_{t_1}, y_{t_1})$ and $(x_{t_2}, y_{t_2})$ are independent, and
+			\item $(x_t, y_t)$ are jointly normally distributed.
+		\end{enumerate}
+	Under these assumptions, we use the test statistic 
+		\begin{equation}
+			\label{eq:pearsonTest}
+			T = \hat{\rho} \sqrt{\frac{n - 2}{1 - \hat{\rho}^2}},
+		\end{equation}
+	where $T$ follows a $t$-distribution with $df = n - 2$ degrees of freedom under $H_0$. 
+	
+	
+	In practice, particularly when dealing with financial data, the assumptions 1 and 2 are often not well satisfied. For starters, the log return of any particular stock often \textit{does not} follow a normal distribution, which violates assumption 2. Furthermore, the development of the price of a stock may not be generally independent across time. However, for purposes of simplification, it is often assumed to be the case in the theory financial modeling that stock prices are independently and identically normally distributed. 
+ 	
 	\subsection{Linear Regression on Financial Time Series}
 	\subsection{Autocorrelation, Heteroskedasticity, and Robust Inference}
 	

@@ -231,8 +231,6 @@
 				\item \textbf{The data is random and from independent samples.} For this time-series data, this means that there is no autocorrelation. This is a reasonable assumption as, due to the efficient market hypothesis, any obvious information from past data, is priced-in to the current valuation. This assumption is checked using an ACF plot to see if there is significant autocorrelation between the current log-return and lagging log-returns. 
 			\end{enumerate}
 		
-		The residuals are clustered around zero implying that modeling log returns can be done using a linear approximation. There are noticeable outliers at the extreme fitter values of -.2 and .2. This is expected in crypto data since they are a volatile asset. These extreme points perhaps suggest that some coins or days had large returns relative to BTC. 
-		
 		The Q–Q plots for SPY and BTC log returns in \autoref{fig:qqSPYBTC} below reveal important differences and similarities in their distributions relative to a normal distribution. For both assets, the mid-quantiles lie close to the theoretical line. This suggests the bulk of the return distribution is approximately symmetric and only moderately non-normal. However it is apparent that the points deviate from the straight line in both the lower and upper extremes. This indicates that both BTC and SPY returns are more heavy-tailed than a Normal distribution.
 		
 		
@@ -256,7 +254,7 @@
 				\caption{ACF plot for BTC.}
 			\end{figure}
 		As we can see , while there are a couple spikes in correlation at lags of 3 days and 20 days, for the most part, Bitcoin shows no autocorrelation with itself. Therefore, we conclude that our hypothesis test \autoref{eq:q1hyp} can be reasonably applied to our data. 
-		\subsubsection{Question 1 Hypothesis Results}
+		\subsubsection{Question 1 Hypothesis Test Results}
 		Therefore, in \texttt{R}, we coded the hypothesis test in \autoref{eq:q1hyp} and computed the associated test statistic in \autoref{eq:pearsonTest} and obtained a \textbf{Pearson correlation coefficient} of $\hat{\rho} = 0.3542$ and an associated $p$-value of $4.79 \times 10^{-16}$.  Since, for our analysis, $\alpha = 0.05 \gg 4.79 \times 10^{-16}$, we \textbf{reject the null hypothesis} $H_0: \hat{\rho} = 0$ and conclude that there is a statistically significant correlation between the daily log returns of Bitcoin and those of the S\&P 500. 
 		
 		
@@ -279,7 +277,83 @@
 		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
 			\textbf{Question 2: } \textbf{\textit{Do memecoins follow the price changes of Bitcoin more than native coins?}}
 		\end{tcolorbox}
+		To answer this question, we use the multiple linear regression model with interaction that was first shown in \autoref{eq:question2linreg}: 
+			\begin{equation}
+				\label{eq:question2linreg2}
+				\mathrm{Return}_{i,t} = \beta_0 + \beta_1 \mathrm{BTC}_t + \beta_2 \mathrm{Memecoin}_{i,t} + \beta_3 (\mathrm{BTC}_t \times \mathrm{Memecoin}_{i,t}) + \varepsilon_{i,t}. 
+			\end{equation}
+		where we recall that 
+		\begin{equation*}
+			\mathrm{Memecoin}_i = \begin{cases}1 & \text{if coin } i \text{ is a memecoin}, \\ 0 & \text{if coin } i \text{ is a nativecoin}.\end{cases}
+		\end{equation*}
+		Then, for each coin (indexed by $j = 1, \dots, 14$, 9 native coins, 5 meme coins), we compute  the test statistic from \autoref{eq:mlsTest}: $$t_j = \frac{\hat{\beta}_j}{\sqrt{\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}}$$ where we recall that  $\widehat{\mathrm{Var}}_{\mathrm{NW}}$ is the \textbf{Newey-West estimator} of the covariance matrix of $\widehat{\boldsymbol \beta}$ given in \autoref{eq:neweyWest}. 
+		
+		Now, with regard to \autoref{eq:question2linreg2}, our hypothesis test is as follows:
+		\begin{equation}
+			\label{eq:question2hyp}
+			\boxed{H_0: \beta_3 = 0 \qquad \text{vs.} \qquad H_1: b_3 > 0}
+		\end{equation} 
+		which we test at the \textbf{95\% confidence level}. 
+		
+		To run this test, we must make the following assumptions about our data:
+			\begin{enumerate}
+				\item There must be linearity in the parameters. This is a reasonable assumption as all cryptocurrencies involved share an asset class. This assumption can be visually checked in the Residuals vs. Fitted plot. 
+				\item There must be homoskedasticity in the data. This assumption is also likely to be violated due to how financial data exhibits periods of higher and lower volatility. Additionally, meme coins often rely on social-media driven marketing to attract new traders. This is likely to cause periods of much higher volatility over the short term. To mitigate this violation, we will use heteroskedasticity-robust standard errors as discussed. This assumption is visualized in the Scale-Location plot. 
+				\item There must be independence of the errors. This means that there cannot be any autocorrelation. As stated before, this is reasonable to assume due to the efficient market hypothesis. 
+				\item The errors must be normally distributed. The distribution of the residuals are likely to showcase fat-tail behavior similar to the returns. This assumption is visually checked in the QQ-Residuals plot.
+			\end{enumerate}
+		
+		Let's start with checking the first hypothesis, being that there is no linearity in the parameters. For this, we have the Residuals vs. Fitted values plot in \autoref{fig:residVsFit} below:
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale = 0.4]{q2_diag_residuals_vs_fitted.png}
+				\caption{Residuals vs. Fitted Plot.}
+				\label{fig:residVsFit}
+			\end{figure}
+		From the above plot, we see that there is no major systematic curvature in the data (see the red line). Therefore, we can safely say assumption 1 is satisfied.
+		
+		
+		We already expect from the outset that the homoskedasticity assumption that is required for legacy multiple linear regression will not hold for our financial data, therefore requiring us to use the Newey-West heteroskedasticity-robust standard errors as discussed above. We visualize the lack of homoskedasticity in the \textit{scale-location} plot below, which illustrates the relationship between the fitted values and the variability of the residuals:
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale = 0.4]{q2_diag_scale_location.png}
+				\caption{Scale-Location plot of fitted values vs. residuals.} 
+				\label{fig:q2scale}
+			\end{figure}
+		As we can see, there is a strong $V$-shape in the red line in \autoref{fig:q2scale} above, indicating our data is heteroskedastic, which reinforces our motivation to use the Newey-West approach to multiple linear regression. 
+		
+		
+		Next, we check to see if the errors exhibit autocorrelation, which we expect. While this expectation is a violation of one of the crucial assumptions, the Newey-West approach is robust to autocorrelation, and hence the ACF plot of the errors showing strong autocorrelation in \autoref{fig:q2acf} below further justifies our use of the Newey-West standard error formulation.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.4]{q2_diag_acf.png}
+			\caption{ACF plot of residuals.}
+			\label{fig:q2acf}
+		\end{figure} 
+		
+		Finally, we check for normality of the distribution of errors. While we expect them to show fat tails, as these are financial returns, our MLR is still valid as our Newey-West approach does not require errors to be normally distributed. Again, we are justifying our approach using Newey-West standard errors.
+		
+		\begin{figure}[H]
+			\centering 
+			\includegraphics[scale = 0.4]{q2_diag_qqplot.png}
+			\caption{QQ plot of errors.}
+			\label{fig:q2qqplot}
+		\end{figure}
+		
+		As seen in \autoref{fig:q2qqplot} above, the QQ-plot shows that the errors exhibit fat tails, but otherwise follow a linear alignment towards the center. 
+		
+		\subsubsection{Question 2 Hypothesis Test Results}
+		
+		Therefore, after coding the hypothesis test in \autoref{eq:question2hyp}, we obtained a value for $\beta_3 = 0.4473$ at a $p$ value less than $2\times 10^{-16}$. Therefore, we \textbf{strongly reject the null hypothesis} $H_0: \beta_3 = 0$ and conclude that there is very strong statistical evidence suggesting that memecoins are more heavily levered on Bitcoin than native coins are. 
 		\subsubsection{The Effect of Missing Values for Question 1}
+		
+		\paragraph{MCAR} (Missing Completely At Random). To look at the effect of random missing values on our hypothesis test in \autoref{eq:question2hyp}, we wanted to see what would happen to our hypothesis test results of we randomly deleted 20\% of memecoin returns. Memecoins, as their name suggests, are just patently not serious coins, and can have weak infrastructure making data transmission unreliable. While deleting 20\% of memecoin returns can reflect a simple packet loss in data transmission over the internet, say, between a user and a crypto trading platform, it can also represent a structural failure of the low-effort memecoin. 
+		
+		
+		So, in the case of this MCAR test, we obtained a value of $\beta_{3, \mathrm{MCAR}} = 0.4665$ at a $p$-value still less than $2 \times 10^{-16}$. So, even in the case of deleting 20\% of memecoin return data, we still strongly reject the null hypothesis. This makes sense when looking at our untampered hypothesis test. The correlation between memecoins and Bitcoin is so strong, that we can conclude that memecoins are consistently sensitive to price changes in bitcoin. So, even if we deleted a continuous window of data, we would still see this effect. 
+		
+		\paragraph{MNAR} (Missing Not At Random). In terms of the effect of non-random missing values in the crypto data,  we decided to take a similar approach to our MNAR analysis of first question. Here, we first wrote \texttt{R} code to identify the lowest 5\% of memecoin returns, and delete 90\% of those observations. Again, this is reflective of a real-world event where holders of memecoins "panic sell", perhaps on news that the owner of that particular memecoin is about to "pull the rug"\footnote{"Pulling the rug" in crypto refers to when the developers of a particular coin suddenly liquidate all of the coin's value. This crashes the price to zero, and all other investors lose all of their money}. In this case, the results of our hypothesis test change somewhat significantly, and we end up with a coefficient of $\beta_{3, \mathrm{MNAR}} = 0.2213$ at a $p$-value of  $3.41 \times 10^{-10}$. So, in this case, while we still strongly reject $H_0$, our new coefficient value says that memecoin is only \textbf{\textit{half}} as levered as in the original hypothesis test (which gave us $\beta_3 = 0.4473$). Conceptually, this makes sense,  for similar reasons as discussed in the MNAR analysis for question 1: the leverage of one asset on another is strongly revealed when one asset crashes and another follows suit simultaneously; if that data is removed, the effect will no longer be observed. In this MNAR analysis, we are targeting an event (a crash in the memecoin price) that is most likely to reveal heavy leaverage on BTC or not. Now, despite a lower $\beta_3$ value, we still see that outside of crashes memecoins are strongly levered on BTC, more than native coins. 
 	\section{Conclusion}
 	\subsection{Limitations of Our Approach}
 	As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been native coins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 

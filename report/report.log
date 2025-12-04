@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.12.2)  3 DEC 2025 21:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2025.12.2)  3 DEC 2025 23:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -958,7 +958,7 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
 (Font)              scaled to size 10.0pt on input line 71.
 LaTeX Font Info:    Font shape `OT1/ntxsups/m/n' will be
 (Font)              scaled to size 10.0pt on input line 71.
-<572_SPY_daily.png, id=120, 883.80188pt x 578.91281pt>
+<572_SPY_daily.png, id=125, 883.80188pt x 578.91281pt>
 File: 572_SPY_daily.png Graphic file (type png)
 <use 572_SPY_daily.png>
 Package pdftex.def Info: 572_SPY_daily.png  used on input line 83.
@@ -976,31 +976,31 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/it' will be
 (Font)              scaled to size 12.0pt on input line 139.
  [9] [10]
-<572_SPY_ACF.png, id=185, 586.44093pt x 359.09157pt>
+<572_SPY_ACF.png, id=190, 586.44093pt x 359.09157pt>
 File: 572_SPY_ACF.png Graphic file (type png)
 <use 572_SPY_ACF.png>
 Package pdftex.def Info: 572_SPY_ACF.png  used on input line 171.
 (pdftex.def)             Requested size: 293.21974pt x 179.54533pt.
  [11] [12 <./572_SPY_ACF.png (PNG copy)>]
-<q1_1_growth.png, id=200, 722.7pt x 433.62pt>
+<q1_1_growth.png, id=205, 722.7pt x 433.62pt>
 File: q1_1_growth.png Graphic file (type png)
 <use q1_1_growth.png>
 Package pdftex.def Info: q1_1_growth.png  used on input line 181.
 (pdftex.def)             Requested size: 361.3491pt x 216.80946pt.
-<q2_3_native_grid_scatter.png, id=203, 867.24pt x 578.16pt>
+<q2_3_native_grid_scatter.png, id=208, 867.24pt x 578.16pt>
 File: q2_3_native_grid_scatter.png Graphic file (type png)
 <use q2_3_native_grid_scatter.png>
 Package pdftex.def Info: q2_3_native_grid_scatter.png  used on input line 188.
 (pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
 
 [13 <./q1_1_growth.png>]
-<q2_4_meme_grid_scatter.png, id=213, 867.24pt x 578.16pt>
+<q2_4_meme_grid_scatter.png, id=218, 867.24pt x 578.16pt>
 File: q2_4_meme_grid_scatter.png Graphic file (type png)
 <use q2_4_meme_grid_scatter.png>
 Package pdftex.def Info: q2_4_meme_grid_scatter.png  used on input line 195.
 (pdftex.def)             Requested size: 433.61894pt x 289.07928pt.
  [14 <./q2_3_native_grid_scatter.png>] [15 <./q2_4_meme_grid_scatter.png>]
-<diag_linearity.png, id=229, 803.0pt x 602.25pt>
+<diag_linearity.png, id=234, 803.0pt x 602.25pt>
 File: diag_linearity.png Graphic file (type png)
 <use diag_linearity.png>
 Package pdftex.def Info: diag_linearity.png  used on input line 222.
@@ -1014,39 +1014,65 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/it' will be
 (Font)              scaled to size 10.0pt on input line 229.
 [16] [17 <./diag_linearity.png (PNG copy)>]
-<diag_qq_btc.png, id=246, 803.0pt x 602.25pt>
+<diag_qq_btc.png, id=251, 803.0pt x 602.25pt>
 File: diag_qq_btc.png Graphic file (type png)
 <use diag_qq_btc.png>
-Package pdftex.def Info: diag_qq_btc.png  used on input line 242.
+Package pdftex.def Info: diag_qq_btc.png  used on input line 240.
 (pdftex.def)             Requested size: 216.8129pt x 162.60966pt.
-<diag_qq_spy.png, id=247, 803.0pt x 602.25pt>
+<diag_qq_spy.png, id=252, 803.0pt x 602.25pt>
 File: diag_qq_spy.png Graphic file (type png)
 <use diag_qq_spy.png>
-Package pdftex.def Info: diag_qq_spy.png  used on input line 242.
+Package pdftex.def Info: diag_qq_spy.png  used on input line 240.
 (pdftex.def)             Requested size: 216.8129pt x 162.60966pt.
- [18 <./diag_qq_btc.png (PNG copy)> <./diag_qq_spy.png (PNG copy)>]
 <diag_acf_btc.png, id=255, 803.0pt x 602.25pt>
 File: diag_acf_btc.png Graphic file (type png)
 <use diag_acf_btc.png>
-Package pdftex.def Info: diag_acf_btc.png  used on input line 255.
+Package pdftex.def Info: diag_acf_btc.png  used on input line 253.
 (pdftex.def)             Requested size: 240.90186pt x 180.67639pt.
- [19 <./diag_acf_btc.png (PNG copy)>] [20]
-[21] (./report.bbl) [22] (./report.aux)
+ [18 <./diag_qq_btc.png (PNG copy)> <./diag_qq_spy.png (PNG copy)>] [19 <./diag
+_acf_btc.png (PNG copy)>] [20]
+[21]
+<q2_diag_residuals_vs_fitted.png, id=290, 903.375pt x 702.625pt>
+File: q2_diag_residuals_vs_fitted.png Graphic file (type png)
+<use q2_diag_residuals_vs_fitted.png>
+Package pdftex.def Info: q2_diag_residuals_vs_fitted.png  used on input line 30
+9.
+(pdftex.def)             Requested size: 361.3436pt x 281.04501pt.
+ [22]
+<q2_diag_scale_location.png, id=300, 903.375pt x 702.625pt>
+File: q2_diag_scale_location.png Graphic file (type png)
+<use q2_diag_scale_location.png>
+Package pdftex.def Info: q2_diag_scale_location.png  used on input line 319.
+(pdftex.def)             Requested size: 361.3436pt x 281.04501pt.
+ [23 <./q2_diag_residuals_vs_fitted.png (PNG copy)>]
+<q2_diag_acf.png, id=307, 903.375pt x 702.625pt>
+File: q2_diag_acf.png Graphic file (type png)
+<use q2_diag_acf.png>
+Package pdftex.def Info: q2_diag_acf.png  used on input line 330.
+(pdftex.def)             Requested size: 361.3436pt x 281.04501pt.
+ [24 <./q2_diag_scale_location.png (PNG copy)>]
+<q2_diag_qqplot.png, id=314, 903.375pt x 702.625pt>
+File: q2_diag_qqplot.png Graphic file (type png)
+<use q2_diag_qqplot.png>
+Package pdftex.def Info: q2_diag_qqplot.png  used on input line 339.
+(pdftex.def)             Requested size: 361.3436pt x 281.04501pt.
+ [25 <./q2_diag_acf.png (PNG copy)>] [26 <./q2_diag_qqplot.png (PNG copy)>] [27
+] (./report.bbl) [28] (./report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 29D8A5A7ABBA2CCF5B2ADA2F9D704E61;3476.
+(rerunfilecheck)             Checksum: 9C862CB1837DCC85F06AB17455965BCA;3754.
  )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 8 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 23788 strings out of 476041
- 425809 string characters out of 5793174
+ 23843 strings out of 476041
+ 426857 string characters out of 5793174
  1860388 words of memory out of 6000000
- 43674 multiletter control sequences out of 15000+600000
+ 43705 multiletter control sequences out of 15000+600000
  597321 words of font info for 216 fonts, out of 8000000 for 9000
  1137 hyphenation exceptions out of 8191
- 83i,13n,89p,1514b,10750s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 83i,13n,89p,1726b,10750s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/newtx/NewTXBM
 I.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/NewTXMI.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/newtx/NewTXMI7.pfb></usr/share/tex
@@ -1059,10 +1085,10 @@ x/txsys.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/txtt.pfb>
 xlive/texmf-dist/fonts/type1/public/newtx/ztmbi.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/public/newtx/ztmr.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/public/newtx/ztmri.pfb>
-Output written on report.pdf (22 pages, 2446559 bytes).
+Output written on report.pdf (28 pages, 2858147 bytes).
 PDF statistics:
- 358 PDF objects out of 1000 (max. 8388607)
- 293 compressed objects within 3 object streams
- 74 named destinations out of 1000 (max. 500000)
- 202 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 420 PDF objects out of 1000 (max. 8388607)
+ 344 compressed objects within 4 object streams
+ 94 named destinations out of 1000 (max. 500000)
+ 230 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -134,12 +134,27 @@ p7 <- ggplot(final_data, aes(x=is_memecoin, y=log_return_coin, fill=is_memecoin)
 ggsave("project_plots/q2_7_violin.png", plot=p7, width=8, height=6)
 
 # Diagnostic plots
-baseline_model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = final_data)
-png("project_plots/q2_8_diagnostics.png", width=1000, height=800)
-par(mfrow = c(2, 2)); plot(baseline_model, which=1); qqPlot(baseline_model); plot(baseline_model, which=3); acf(baseline_model$residuals)
+
+# residuals vs. fitted values
+png("project_plots/q2_diag_residuals_vs_fitted.png", width=900, height=700)
+plot(baseline_model, which = 1)
 dev.off()
 
-print("Plots saved.")
+# qq plot
+png("project_plots/q2_diag_qqplot.png", width=900, height=700)
+qqPlot(baseline_model, main="Normal Q-Q Plot")
+dev.off()
+
+# scale-location plot
+png("project_plots/q2_diag_scale_location.png", width=900, height=700)
+plot(baseline_model, which = 3)
+dev.off()
+
+# ACF plot of residuals
+png("project_plots/q2_diag_acf.png", width=900, height=700)
+acf(baseline_model$residuals, main="ACF of Residuals")
+dev.off()
+
 
 
 # Extract interaction term after some data cleaning (making sure each category has enough data)

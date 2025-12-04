@@ -146,7 +146,22 @@
 		\end{eqnarray}
 		where $\widehat{\Omega}_{\mathrm{NW}}$ is the complicated expression $$\widehat{\Omega}_{\mathrm{NW}} = \left(\frac{1}{n}\sum_{t = 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t} \mathbf{X}_t \mathbf{X}_{t}^T\right) + \sum_{h = 1}^L \left(1 - \frac{h}{L+ 1}\right)\left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T + \left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T\right)^T\right).$$
 		In this case, we replace $\mathrm{SE}(\widehat{\beta}_j)$ in \autoref{eq:mlsTest} with $\mathrm{SE}_{\mathrm{NW}} = \sqrt{	\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}$ using \autoref{eq:neweyWest}. The resulting $p$-values can then be trusted and the multiple linear regression analysis can be performed fully. In \texttt{R}, we simply use the \texttt{sandwich} and \texttt{lmtest} package, fit our linear model \texttt{model <- lm(...)} as usual, calculate the Newey-West covariance matrix with \texttt{NeweyWest(model)}, and display the regression results using \texttt{coeftest(model, NeweyWest(model))}. 
-	
+		\subsection{Autocorrelation}
+		In the previous section, it was mentioned that one of the crucial assumptions to apply linear regression analysis is that the errors are uncorrelated across observation, and in the specific case of time series, this is the requirement that there is no \textbf{autocorrelation}. 
+		
+		
+		Generally speaking, the autocorrelation of a time series is a measurement of how much a particular time series of interest $x_t$ correlates with a delayed copy of it $x_{s}$, where $s \neq t$ and $|t - s|$ is called the \textbf{\textit{lag}}. We define the \textbf{\textit{autocorrelation function}} of a time series $x_t$ as follows: 
+		\begin{equation}
+			\label{eq:acfFunction}
+			\rho_{x}(s, t) = \mathbb{E}[x_s \cdot x_t].
+			\end{equation} 
+		Of course, in practice, we have to estimate $\rho_x$ using sample data. In this case, given time series data $\{x_1, x_2, \dots, x_n\}$ (e.g., $n$ days of closing prices), if we let $\overline{x} = \sum_{t = 1}^n x_t /n$, and let $$c_k := \sum_{t = 1}^{n - k} \frac{(x_{t + k} - \overline{x})(x_t - \overline{x})}{n},$$ then the \textbf{\textit{sample autocorrelation function}} is given by 
+		\begin{equation}
+			\label{eq:acfSample}
+			\hat{\rho}_x(k) = \frac{c_k}{c_0}.
+		\end{equation}
+		
+		In this case, the input $k$ is called the \textbf{\textit{lag}}. To assess whether or not a time series has autocorrelation, it is typically useful to plot values of $\hat{\rho}_x(k)$ for $k = 1, \dots, n$ in what is called a \textbf{\textit{correlegram}}.  A correlegram plots the correlation between the time series and a copy of itself lagged by $k$ in time. 
 	\newpage 
 	\section{Exploratory Analysis of the Data}
 		To understand Bitcoin’s behavior relative to a traditional equity benchmark we compare the growth of a \$1 investment in BTC to the S\&P 500 ETF (SPY), along with the corresponding daily volatility in \autoref{fig:myFigure} below. These comparisons highlight the structural differences between cryptocurrency markets and conventional equity markets.
@@ -174,12 +189,18 @@
 		
 		Overall this leads us to the idea that native coins exhibit stronger, more stable, and more linear sensitivity to BTC, whereas meme coins demonstrate weaker systematic exposure and substantially greater volatility. Native coins behave more like assets grounded in platform fundamentals, while memecoins resemble speculative instruments whose return profiles are heavily influenced by other speculative factors rather than market-wide factors. This motivates our deeper dive in question 2.
 		
-	\section{Results}
+	\section{Analysis \& Results}
 		\subsection{Question 1}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
 			\textbf{Question 1: } \textbf{\textit{Does Bitcoin's price movements follow those of the S\&P 500}}? 
 		\end{tcolorbox}
+		
+		To formally study this question, we set up the following hypothesis test in \autoref{eq:q1hyp} below using \textbf{Pearson's correlation coefficient} from \autoref{eq:pearson}: 
+		\begin{equation} 
+			\label{eq:q1hyp}
+			\boxed{H_0: \hat{\rho} = 0 \qquad \text{vs.} \qquad H_1: \hat{\rho} \neq 0}
+		\end{equation}
 		
 		The plot in \autoref{fig:correlationBTCvsSPY} below assesses linearity and is meant to show that model errors have a mean of zero. 
 		
@@ -190,6 +211,13 @@
 			\label{fig:correlationBTCvsSPY}
 		\end{figure}
 		
+		In order to perform this hypothesis test, we discuss the fulfillment of key assumptions: 
+			\begin{enumerate}
+				\item \textbf{The data is generated from a normal distribution}. This assumption is likely to be violated. This is because financial returns often exhibit fat-tails. To mitigate this behavior of the data, we use the log-returns. This transformation should limit the excess kurtosis. Additionally, since log-returns are additive, the daily log-return is equivalent to the sum of many momentary returns. Due to the efficient market hypothesis\footnote{The \textbf{\textit{efficient market hypothesis}} says, in principle, says that one cannot consistently beat the market. In particular, the price of a particular asset reflects all available information, so that only new information moves prices. Since new information is unpredictable, it follows that price movements based on that information are unpredictable. Informally speaking, when we sum unpredictable events, we obtain a normally distributed \textbf{\textit{random walk}}. Therefore, the log return $r_t = \log(P_t/P_{t - 1})$, which due to the property of logs can be written as the sum of unpredictable price changes $\log(P_t/P_{t - 1}) = \sum_{s = 1}^t\log(P_s/P_{s - 1})$, can be viewed as itself a random walk, which is normally distributed.}, these returns result from a random walk. By the Central Limit Theorem, this sum should be approximately normally distributed especially when dealing with many data points. This assumption is visually assessed by examining the individual variables’ QQ-plots.
+				\item \textbf{There must be a linear relationship between groups.}  This again is a reasonable assumption as they are both heavily intertwined with our financial markets. When investors are optimistic about the future, one would expect both the SPY fund and the price of Bitcoin to move. Likewise, when investors are fearful about economic instability, money is generally reallocated away from assets with prospective growth towards assets with current earnings and utility. This assumption can be visually inspected using the scatterplot of the log-returns.
+				\item \textbf{The data is random and from independent samples.} For this time-series data, this means that there is no autocorrelation. This is a reasonable assumption as, due to the efficient market hypothesis, any obvious information from past data, is priced-in to the current valuation. This assumption is checked using an ACF plot to see if there is significant autocorrelation between the current log-return and lagging log-returns. 
+			\end{enumerate}
+		
 		The residuals are clustered around zero implying that modeling log returns can be done using a linear approximation. There are noticeable outliers at the extreme fitter values of -.2 and .2. This is expected in crypto data since they are a volatile asset. These extreme points perhaps suggest that some coins or days had large returns relative to BTC. 
 		
 		The Q–Q plots for SPY and BTC log returns in \autoref{fig:qqSPYBTC} below reveal important differences and similarities in their distributions relative to a normal distribution. For both assets, the mid-quantiles lie close to the theoretical line. This suggests the bulk of the return distribution is approximately symmetric and only moderately non-normal. However it is apparent that the points deviate from the straight line in both the lower and upper extremes. This indicates that both BTC and SPY returns are more heavy-tailed than a Normal distribution.
@@ -198,7 +226,7 @@
 			\begin{tabular}{cc}
 				\includegraphics[scale = 0.27]{diag_qq_btc.png} & \includegraphics[scale = 0.27]{diag_qq_spy.png}
 			\end{tabular}
-			\caption{\textbf{Left}: Q-Q Plot of BTC returns. \textbf{Right}: Q-Q plot of SPY returns.}
+			\caption{\textbf{Left}: Q-Q Plot of BTC returns. \qquad \qquad  \textbf{Right}: Q-Q plot of SPY returns.}
 			\label{fig:qqSPYBTC}
 		\end{figure}
 		The BTC Q–Q plot shows a bit more curvature at the extremes, especially on the right tail, where several points rise slightly further from the line. There are one or two returns that stand further above the line than any corresponding point in SPY’s Q–Q plot. These are individual observations and do represent a fundamentally different distributional shape
@@ -208,7 +236,7 @@
 		\subsection{Question 2}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
-			\textbf{Question 2: } \textbf{\textit{Are memecoins follow the price changes of Bitcoin more than native coins?}}
+			\textbf{Question 2: } \textbf{\textit{Do memecoins follow the price changes of Bitcoin more than native coins?}}
 		\end{tcolorbox}
 		\subsubsection{The Effect of Missing Values for Question 1}
 	\section{Conclusion}

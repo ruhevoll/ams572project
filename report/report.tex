@@ -146,7 +146,9 @@
 		\end{eqnarray}
 		where $\widehat{\Omega}_{\mathrm{NW}}$ is the complicated expression $$\widehat{\Omega}_{\mathrm{NW}} = \left(\frac{1}{n}\sum_{t = 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t} \mathbf{X}_t \mathbf{X}_{t}^T\right) + \sum_{h = 1}^L \left(1 - \frac{h}{L+ 1}\right)\left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T + \left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T\right)^T\right).$$
 		In this case, we replace $\mathrm{SE}(\widehat{\beta}_j)$ in \autoref{eq:mlsTest} with $\mathrm{SE}_{\mathrm{NW}} = \sqrt{	\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}$ using \autoref{eq:neweyWest}. The resulting $p$-values can then be trusted and the multiple linear regression analysis can be performed fully. In \texttt{R}, we simply use the \texttt{sandwich} and \texttt{lmtest} package, fit our linear model \texttt{model <- lm(...)} as usual, calculate the Newey-West covariance matrix with \texttt{NeweyWest(model)}, and display the regression results using \texttt{coeftest(model, NeweyWest(model))}. 
+		\newpage 
 		\subsection{Autocorrelation}
+		\label{subsec:2.4}
 		In the previous section, it was mentioned that one of the crucial assumptions to apply linear regression analysis is that the errors are uncorrelated across observation, and in the specific case of time series, this is the requirement that there is no \textbf{autocorrelation}. 
 		
 		
@@ -161,7 +163,16 @@
 			\hat{\rho}_x(k) = \frac{c_k}{c_0}.
 		\end{equation}
 		
-		In this case, the input $k$ is called the \textbf{\textit{lag}}. To assess whether or not a time series has autocorrelation, it is typically useful to plot values of $\hat{\rho}_x(k)$ for $k = 1, \dots, n$ in what is called a \textbf{\textit{correlegram}}.  A correlegram plots the correlation between the time series and a copy of itself lagged by $k$ in time. 
+		In this case, the input $k$ is called the \textbf{\textit{lag}}. We typically abbreviate both the sample autocorrelation function in \autoref{eq:acfSample} and the usual autocorrelation function in \autoref{eq:acfFunction} both as \textbf{ACF}. 
+		
+		To assess whether or not a time series has autocorrelation, it is typically useful to plot values of $\hat{\rho}_x(k)$ for $k = 1, \dots, n$ in what is called a \textbf{\textit{correlegram}}.  A correlegram plots the correlation between the time series and a copy of itself lagged by $k$ in time.  When plotting the correlegram of a time series in \texttt{R}, we use the \texttt{acf} function (part of the \texttt{stats} package).  For example, we can plot the ACF of the S\&P 500 log returns from \autoref{fig:SPYdaily} in \autoref{fig:spyACF} below: 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.5]{572_SPY_ACF.png}
+			\caption{Plot of sample autocorrelation function $\hat{\rho}(k)$ for lag values $k$. }
+			\label{fig:spyACF} 
+		\end{figure}
+		When plotting the ACF in \texttt{R}, a 95\% confidence interval is provided to show whether a correlation between a time series and a copy of itself lagged behind by $k$ is statistically significant. Looking at the ACF plot in \autoref{fig:spyACF}, we can see a large spike showing $\hat{\rho}(0) = 1.0$, and this is expected. A time series fully correlates with a pure copy of itself with no lag. Looking further out on the plot, we see there is not much self-correlation with the S\&P 500 daily log returns and lagged copies of itself, except for small spikes at day 20, 25, and 30 (for instance). Overall, looking at \autoref{fig:spyACF}, we see that it is reasonable to apply models which require data have no autocorrelation on the S\&P 500 log returns. 
 	\newpage 
 	\section{Exploratory Analysis of the Data}
 		To understand Bitcoin’s behavior relative to a traditional equity benchmark we compare the growth of a \$1 investment in BTC to the S\&P 500 ETF (SPY), along with the corresponding daily volatility in \autoref{fig:myFigure} below. These comparisons highlight the structural differences between cryptocurrency markets and conventional equity markets.
@@ -191,6 +202,7 @@
 		
 	\section{Analysis \& Results}
 		\subsection{Question 1}
+		\subsubsection{Hypothesis Setup and Assumptions}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
 			\textbf{Question 1: } \textbf{\textit{Does Bitcoin's price movements follow those of the S\&P 500}}? 
@@ -201,13 +213,14 @@
 			\label{eq:q1hyp}
 			\boxed{H_0: \hat{\rho} = 0 \qquad \text{vs.} \qquad H_1: \hat{\rho} \neq 0}
 		\end{equation}
+		with test statistic from \autoref{eq:pearsonTest}, which we recall here for convenience: $$T = \hat{\rho} \sqrt{\frac{n - 2}{1 - \hat{\rho}}}$$
 		
-		The plot in \autoref{fig:correlationBTCvsSPY} below assesses linearity and is meant to show that model errors have a mean of zero. 
+		We wish to perform this hypothesis test at a \textbf{95\% confidence level}. The plot in \autoref{fig:correlationBTCvsSPY} below assesses linearity and is meant to show that model errors have a mean of zero.
 		
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\centering
 			\includegraphics[scale = 0.4]{diag_linearity.png}
-			\caption{Plot of BTC vs. SPY returns with regression line. (Correlation coefficient: $\hat{\rho} \approx 0.343.$ )}
+			\caption{Plot of BTC vs. SPY returns with regression line.}
 			\label{fig:correlationBTCvsSPY}
 		\end{figure}
 		
@@ -221,6 +234,8 @@
 		The residuals are clustered around zero implying that modeling log returns can be done using a linear approximation. There are noticeable outliers at the extreme fitter values of -.2 and .2. This is expected in crypto data since they are a volatile asset. These extreme points perhaps suggest that some coins or days had large returns relative to BTC. 
 		
 		The Q–Q plots for SPY and BTC log returns in \autoref{fig:qqSPYBTC} below reveal important differences and similarities in their distributions relative to a normal distribution. For both assets, the mid-quantiles lie close to the theoretical line. This suggests the bulk of the return distribution is approximately symmetric and only moderately non-normal. However it is apparent that the points deviate from the straight line in both the lower and upper extremes. This indicates that both BTC and SPY returns are more heavy-tailed than a Normal distribution.
+		
+		
 		\begin{figure}[H]
 			\centering
 			\begin{tabular}{cc}
@@ -232,7 +247,30 @@
 		The BTC Q–Q plot shows a bit more curvature at the extremes, especially on the right tail, where several points rise slightly further from the line. There are one or two returns that stand further above the line than any corresponding point in SPY’s Q–Q plot. These are individual observations and do represent a fundamentally different distributional shape
 		
 		Overall, the Q–Q plots for BTC and SPY look quite similar, showing the typical heavy-tailed structure of financial returns. Both assets depart from normality in broadly the same way. While Bitcoin exhibits slightly stronger tail deviations the difference is modest. This small difference could imply that BTC is slightly more volatile than SPY. 
+		
+		
+		To check assumption 3, we verify that the time series data for BTC and SPY has no autocorrelation. From our discussion back in \autoref{subsec:2.4}, we already illustrated that the S\&P 500 log returns do not exhibit autocorrelation (see \autoref{eq:acfSample}). In the figure below, we verify the same result for Bitcoin: 
+			\begin{figure}[H]
+				\centering
+				\includegraphics[scale = 0.3]{diag_acf_btc.png}
+				\caption{ACF plot for BTC.}
+			\end{figure}
+		As we can see , while there are a couple spikes in correlation at lags of 3 days and 20 days, for the most part, Bitcoin shows no autocorrelation with itself. Therefore, we conclude that our hypothesis test \autoref{eq:q1hyp} can be reasonably applied to our data. 
+		\subsubsection{Question 1 Hypothesis Results}
+		Therefore, in \texttt{R}, we coded the hypothesis test in \autoref{eq:q1hyp} and computed the associated test statistic in \autoref{eq:pearsonTest} and obtained a \textbf{Pearson correlation coefficient} of $\hat{\rho} = 0.3542$ and an associated $p$-value of $4.79 \times 10^{-16}$.  Since, for our analysis, $\alpha = 0.05 \gg 4.79 \times 10^{-16}$, we \textbf{reject the null hypothesis} $H_0: \hat{\rho} = 0$ and conclude that there is a statistically significant correlation between the daily log returns of Bitcoin and those of the S\&P 500. 
+		
+		
+		A Pearson correlation coefficient of $\hat{\rho} = 0.35$ suggests a positive linear relationship, albeit weak, between Bitcoin and the S\&P 500. 
+		
 		\subsubsection{The Effect of Missing Values for Question 1}
+		In this section, we look at the effect of missing values on the hypothesis test in \autoref{eq:q1hyp} by deleting S\&P 500 return data.
+		\paragraph{MCAR} (Missing Completely at Random). To look at the effect of random missing values in the S\&P 500 return data, we deleted 15\% of S\&P 500 return data in \texttt{R} and re-ran the hypothesis test in \autoref{eq:q1hyp}. From this, we obtained (with a fixed randomness seed) a Pearson correlation coefficient of $\hat{\rho}_{\mathrm{MCAR}} = 0.3807$ with a $p$ value of $4.89 \times 10^{-16}$, which is still far below our $\alpha$-threshold of 0.05. Hence, even with 15\% of the data missing, we \textbf{still reject the null hypothesis}. 
+		
+		
+		The results of our MCAR stress test our reassuring. Given that many firms use the internet to access live market data, packet loss can cause some of that data to never be received. Therefore, the results of our MCAR test show that even with a sizable portion of missing data, the results of our statistical inferences still hold. 
+		\paragraph{MNAR}
+		
+		
 		\subsection{Question 2}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
@@ -240,7 +278,10 @@
 		\end{tcolorbox}
 		\subsubsection{The Effect of Missing Values for Question 1}
 	\section{Conclusion}
+	\subsection{Limitations of Our Approach}
+	As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been native coins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 
 	
+	This selection bias highlights the deviations in risk between coins that is unrelated to the movements of other coins. Additionally, it stresses the need for more study in determining what other factors (market capitalization, founder’s social media presence, etc.) influence the price movements of cryptocurrencies as well as more empirical and academic ways to classify subgroups of this asset class. 
 	\bibliographystyle{plain} 
 	\bibliography{references}
 \end{document}

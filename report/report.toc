@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Questions of Interest}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Description of the Data}{4}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Background}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Introduction to Financial Time Series}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Inference for the Correlation between Time Series}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Linear Regression on Financial Time Series}{8}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Exploratory Analysis of the Data}{11}{section.3}%
+\contentsline {section}{\numberline {4}Results}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Question 1}{14}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}The Effect of Missing Values for Question 1}{14}{subsubsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.2}Question 2}{14}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}The Effect of Missing Values for Question 1}{14}{subsubsection.4.2.1}%
+\contentsline {section}{\numberline {5}Conclusion}{14}{section.5}%

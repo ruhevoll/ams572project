@@ -7,11 +7,15 @@
 \usepackage{hyperref}
 \doublespace
 \usepackage{graphicx}
+\usepackage{tcolorbox}
 \title{\textbf{AMS 572 Project Report}}
 \author{Benjamin Minkin, Marcus Minutello, Jacob White}
 \date{Due: December 5, 2025 \@ 10:00am}
 \begin{document} 
 	\maketitle
+	\newpage 
+	\tableofcontents
+	\newpage 
 	\section{Introduction}
 	Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
 	investment asset. This digital currency is held by major heads funds[1], Fortune 500 companies[2],
@@ -68,7 +72,7 @@
 	weekends were removed. 
 	
 	\section{Background}
-	In this section, we review some basic mathematical machinery with regard to financial time series. 
+	In this section, we review some basic mathematical machinery with regard to financial time series, and discuss the tools we will be using to perform statistical inference. 
 	\subsection{Introduction to Financial Time Series}
 	By a time series we mean a sequence of observations taken at regular time intervals. More formally, a \textbf{time series}  is simply a sequence $\{x_t\}_{t \in T}$ of real numbers $x_t$, for $T = \{t_0, t_1, t_2, t_3, \dots, t_n\}$ some finite indexing set of time increments over a certain period\footnote{In the case of real-world data, this indexing set is finite. However, generally we can make $T$ to be any finite, countably infinite, or even uncountably infinite subset of $\mathbb{R}$ (the real numbers).}. In the case of finance, our sequence $\{x_t\}_{t \in T}$ (which we may write equivalently as $x_t$ for brevity, where the time index $T$ is implicitly understood) represents the evolution of the price of a particular asset over time.  To our notation consistent, we denote the price of a particular asset at the end of a trading day $t$ by $P_t$ . 
 	
@@ -146,13 +150,49 @@
 			\label{eq:neweyWest}
 			\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta}) = (X^T X)^{-1} \left(X^T \widehat{\Omega}_{\mathrm{NW}}X\right)(X^T X)^{-1},
 		\end{eqnarray}
-		where
+		where $\widehat{\Omega}_{\mathrm{NW}}$ is the complicated expression $$\widehat{\Omega}_{\mathrm{NW}} = \left(\frac{1}{n}\sum_{t = 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t} \mathbf{X}_t \mathbf{X}_{t}^T\right) + \sum_{h = 1}^L \left(1 - \frac{h}{L+ 1}\right)\left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T + \left(\frac{1}{n}\sum_{t = h + 1}^n \widehat{\varepsilon}_t \widehat{\varepsilon}_{t - h} \mathbf{X}_t \mathbf{X}_{t - h}^T\right)^T\right).$$
+		In this case, we replace $\mathrm{SE}(\widehat{\beta}_j)$ in \autoref{eq:mlsTest} with $\mathrm{SE}_{\mathrm{NW}} = \sqrt{	\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}$ using \autoref{eq:neweyWest}. The resulting $p$-values can then be trusted and the multiple linear regression analysis can be performed fully. In \texttt{R}, we simply use the \texttt{sandwich} and \texttt{lmtest} package, fit our linear model \texttt{model <- lm(...)} as usual, calculate the Newey-West covariance matrix with \texttt{NeweyWest(model)}, and display the regression results using \texttt{coeftest(model, NeweyWest(model))}. 
 	
-	\subsection{Autocorrelation, Heteroskedasticity, and Robust Inference}
-	
-	\section{Question 1}
-	\section{Question 2}
-
+	\newpage 
+	\section{Exploratory Analysis of the Data}
+		To understand Bitcoin’s behavior relative to a traditional equity benchmark we compare the growth of a \$1 investment in BTC to the S\&P 500 ETF (SPY), along with the corresponding daily volatility in \autoref{fig:myFigure} below. These comparisons highlight the structural differences between cryptocurrency markets and conventional equity markets.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.5]{q1_1_growth.png}
+			\caption{Growth of \$1.00 USD invested in S\&P 500 vs. Bitcoin from November 1, 2023 - November 18, 2025}
+			\label{fig:myFigure}
+		\end{figure}
+		To explore the relationship between daily returns of BTC with native coins and memecoins we started with scatterplots of individual coin returns against BTC along with their fitted linear regression lines. For native coins, we display this relationship in \autoref{fig:BTCvNative} below.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.5]{q2_3_native_grid_scatter.png}
+			\caption{Scatter plots of individual native coin returns against BTC along with their fitted linear regression lines.}
+			\label{fig:BTCvNative}
+		\end{figure}
+		Across the native coins (ADA, ATOM, AVAX, DOT, ETH, LINK, LTC, SOL, XRP), the returns show a strong positive correlation with BTC. The scatterplots show relatively tight clustering around the fitted regression lines, and the slopes are uniformly positive. This suggests that native coins respond in a similar way to market movements of BTC. For memecoins, we display their relationship with BTC in \autoref{fig:BTCvMeme} below. 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.5]{q2_4_meme_grid_scatter.png}
+			\caption{Scatter plots of individual memecoin returns against BTC along with their fitted linear regression lines.}
+			\label{fig:BTCvMeme}
+		\end{figure}
+		The memecoin group (BONK, DOGE, FLOKI, MEME, SHIB) displays noticeably higher dispersion in returns and weaker alignment with BTC movements. While the fitted slopes remain positive for all tokens, the magnitude of the slopes is generally smaller than that observed for native coins, and the returns are more scattered. This suggests that memecoin prices are less attached to the broader crypto-market factor represented by BTC. These tokens appear to exhibit higher volatility. This volatility is often driven by community activity, speculative flows, and social-media-induced demand surges. Even where some memecoins (DOGE) show moderately strong BTC sensitivity, the noise around the fitted line remains substantially larger relative to native coins.
+		
+		Overall this leads us to the idea that native coins exhibit stronger, more stable, and more linear sensitivity to BTC, whereas meme coins demonstrate weaker systematic exposure and substantially greater volatility. Native coins behave more like assets grounded in platform fundamentals, while memecoins resemble speculative instruments whose return profiles are heavily influenced by other speculative factors rather than market-wide factors. This motivates our deeper dive in question 2.
+		
+	\section{Results}
+		\subsection{Question 1}
+		Recall that our first question of study is the following: 
+		\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
+			\textbf{Question 1: } Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, \textit{\textbf{does Bitcoin’s price follow stock market movements}} (in particular, the S\&P 500)? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with traditional investments that it has lost its novelty?
+		\end{tcolorbox}
+		\subsubsection{The Effect of Missing Values for Question 1}
+		\subsection{Question 2}
+		Recall that our first question of study is the following: 
+		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
+			\textbf{Question 2: } How do the price movements of Bitcoin proportionally affect native or meme coins? In particular, \textbf{\textit{are meme coins more affected by the changes in the value of Bitcoin than native coins are?}}
+		\end{tcolorbox}
+		\subsubsection{The Effect of Missing Values for Question 1}
 	\section{Conclusion}
 	
 	\bibliographystyle{plain} 

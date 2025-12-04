@@ -33,13 +33,6 @@
 	existing blockchain networks and are often themed around a specific internet trend or personality to garner attention. In 
 	online circles, these types of coins have earned the title of “meme coin” as they make no novel improvements to the 
 	underlying structure.  
-	
-	Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, does Bitcoin’s 
-	price follow stock market movements? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with 
-	traditional investments that it has lost its novelty? The answer to this question has serious ramifications for portfolio 
-	allocations. If Bitcoin’s movements are unrelated to the stock market, it can be a valuable tool to diversify portfolios 
-	and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as an investment asset 
-	mirrors similar stocks in the digital sphere. 
 
 	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying 
 	technology powering digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel 
@@ -49,6 +42,13 @@
 	coins and investors bet on the underlying technological improvements. 
 
 	\subsection{Questions of Interest}
+		
+	Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, does Bitcoin’s 
+	price follow stock market movements? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with 
+	traditional investments that it has lost its novelty? The answer to this question has serious ramifications for portfolio 
+	allocations. If Bitcoin’s movements are unrelated to the stock market, it can be a valuable tool to diversify portfolios 
+	and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as an investment asset 
+	mirrors similar stocks in the digital sphere. 
 	
 	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying technology powering
 	digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel the motivation fueling the
@@ -81,7 +81,7 @@
 	\begin{figure}[H]
 		\centering 
 		\includegraphics[scale = 0.5]{572_SPY_daily.png}
-		\caption{S\&P 500 Daily Returns, Daily Log Returns, and Closing Prices between Nov 1, 2020 and Nov 1, 2025.}
+		\caption{S\&P 500 Daily Returns, Daily Log Returns, and Closing Prices between Nov 1, 2020 and Nov 18, 2025. \textbf{TODO( Jacob): Remake plot for Nov 1, 2023 - Nov 18, 2025}}
 		\label{fig:SPYdaily}
 	\end{figure}
 	In what follows, we will use analyze the price of different cryptocurrencies and financial assets using log returns as in \autoref{eq:logret}. 
@@ -348,10 +348,10 @@
 		Therefore, after coding the hypothesis test in \autoref{eq:question2hyp}, we obtained a value for $\beta_3 = 0.4473$ at a $p$ value less than $2\times 10^{-16}$. Therefore, we \textbf{strongly reject the null hypothesis} $H_0: \beta_3 = 0$ and conclude that there is very strong statistical evidence suggesting that memecoins are more heavily levered on Bitcoin than native coins are. 
 		\subsubsection{The Effect of Missing Values for Question 1}
 		
-		\paragraph{MCAR} (Missing Completely At Random). To look at the effect of random missing values on our hypothesis test in \autoref{eq:question2hyp}, we wanted to see what would happen to our hypothesis test results of we randomly deleted 20\% of memecoin returns. Memecoins, as their name suggests, are just patently not serious coins, and can have weak infrastructure making data transmission unreliable. While deleting 20\% of memecoin returns can reflect a simple packet loss in data transmission over the internet, say, between a user and a crypto trading platform, it can also represent a structural failure of the low-effort memecoin. 
+		\paragraph{MCAR} (Missing Completely At Random). To look at the effect of random missing values on our hypothesis test in \autoref{eq:question2hyp}, we wanted to see what would happen to our hypothesis test results of we randomly deleted 20\% of memecoin returns. Memecoins, as their name suggests, are just patently not serious coins, and can have weak infrastructure making data transmission unreliable. Deleting 20\% of memecoin returns can reflect a simple packet loss in data transmission over the internet, say, between a user and the crypto trading platform.
 		
 		
-		So, in the case of this MCAR test, we obtained a value of $\beta_{3, \mathrm{MCAR}} = 0.4665$ at a $p$-value still less than $2 \times 10^{-16}$. So, even in the case of deleting 20\% of memecoin return data, we still strongly reject the null hypothesis. This makes sense when looking at our untampered hypothesis test. The correlation between memecoins and Bitcoin is so strong, that we can conclude that memecoins are consistently sensitive to price changes in bitcoin. So, even if we deleted a continuous window of data, we would still see this effect. 
+		So, in the case of this MCAR test, we obtained a value of $\beta_{3, \mathrm{MCAR}} = 0.4665$ at a $p$-value still less than $2 \times 10^{-16}$. So, even in the case of deleting 20\% of memecoin return data, we still strongly reject the null hypothesis. This makes sense when looking at our untampered hypothesis test. The correlation between memecoins and Bitcoin is so strong, that we can conclude that memecoins are, compared to native coins, proportionally more sensitive to price changes in bitcoin. So, even if we deleted a continuous window of data, we would still see this effect. 
 		
 		\paragraph{MNAR} (Missing Not At Random). In terms of the effect of non-random missing values in the crypto data,  we decided to take a similar approach to our MNAR analysis of first question. Here, we first wrote \texttt{R} code to identify the lowest 5\% of memecoin returns, and delete 90\% of those observations. Again, this is reflective of a real-world event where holders of memecoins "panic sell", perhaps on news that the owner of that particular memecoin is about to "pull the rug"\footnote{"Pulling the rug" in crypto refers to when the developers of a particular coin suddenly liquidate all of the coin's value. This crashes the price to zero, and all other investors lose all of their money}. In this case, the results of our hypothesis test change somewhat significantly, and we end up with a coefficient of $\beta_{3, \mathrm{MNAR}} = 0.2213$ at a $p$-value of  $3.41 \times 10^{-10}$. So, in this case, while we still strongly reject $H_0$, our new coefficient value says that memecoin is only \textbf{\textit{half}} as levered as in the original hypothesis test (which gave us $\beta_3 = 0.4473$). Conceptually, this makes sense,  for similar reasons as discussed in the MNAR analysis for question 1: the leverage of one asset on another is strongly revealed when one asset crashes and another follows suit simultaneously; if that data is removed, the effect will no longer be observed. In this MNAR analysis, we are targeting an event (a crash in the memecoin price) that is most likely to reveal heavy leaverage on BTC or not. Now, despite a lower $\beta_3$ value, we still see that outside of crashes memecoins are strongly levered on BTC, more than native coins. 
 	\section{Conclusion}

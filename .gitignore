@@ -63,3 +63,7 @@ report/report.aux
 *.log
 *.gz
 *.aux
+*.log
+*.synctex(busy)
+report/report.log
+*.aux

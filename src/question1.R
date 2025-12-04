@@ -1,7 +1,7 @@
-# AMS 572 Project Question 1
-
 ## !!!! Quantmod may not always work, we should consider downloading the data manually, storing as .csv (for our final submission) so there is no need for an internet connection
 # (for our final submission)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))  # ensure correct working directory
+
 library(quantmod)
 library(tidyverse)
 library(gridExtra) 
@@ -15,23 +15,20 @@ options(scipen = 999)
 # Creates directory in getwd() directory to store plots
 dir.create("project_plots", showWarnings = FALSE)
 
-# Download data
-start_date <- "2023-11-01" 
-tickers <- c("SPY", "BTC-USD")
-data_env <- new.env()
+# --------------------------------------------------------------------
+# MINIMAL EDIT: Load stored CSV instead of downloading with quantmod
+# --------------------------------------------------------------------
+print("Loading stored CSV instead of downloading.")
+raw_df <- read.csv("stored_q1_data.csv")
 
-print("Downloading data.")
-tryCatch({
-  getSymbols(tickers, src = "yahoo", from = start_date, auto.assign = TRUE, env = data_env)
-}, error = function(e) {
-  stop("Error downloading data. Bad internet or typo in ticker name.")
-})
+# Expecting columns: date, spy, btc
+raw_df$date <- as.Date(raw_df$date)
 
-log_returns <- do.call(merge, lapply(data_env, function(x) dailyReturn(Ad(x), type = "log")))
+log_returns <- xts(raw_df[, c("spy", "btc")], order.by = raw_df$date)
 colnames(log_returns) <- c("spy", "btc")
+# --------------------------------------------------------------------
 
 # Data cleaning below
-
 clean_data <- as.data.frame(log_returns) %>% 
   rownames_to_column(var = "date") %>%
   mutate(date = as.Date(date)) %>%
@@ -40,9 +37,7 @@ clean_data <- as.data.frame(log_returns) %>%
 
 print(paste("Baseline N:", nrow(clean_data)))
 
-
 # Data Exploration 
-
 graphics.off()
 
 # Prepare Data
@@ -85,7 +80,7 @@ p5 <- ggplot(long_returns, aes(x = Asset, y = Log_Return, fill = Asset)) +
   labs(title = "5. Distribution of Returns", subtitle = "Compare spread/outliers") + theme_minimal()
 ggsave("project_plots/q1_5_boxplot.png", plot = p5, width = 8, height = 6)
 
-# Diagnostic plots (for checking normality assumptions)
+# Diagnostic plots
 
 # Linearity
 png("project_plots/diag_linearity.png", width = 800, height = 600)
@@ -113,33 +108,22 @@ png("project_plots/diag_acf_btc.png", width = 800, height = 600)
 acf(clean_data$btc, main = "ACF BTC")
 dev.off()
 
-
 print("Plots saved.")
 
-# We create a function so we can easily repeat the test 3 times
+# analysis function
 analyze_correlation <- function(df, label) {
-  # Handling Method: Complete Case Analysis (na.omit)
-  # We drop the rows where data is missing.
   df_clean <- na.omit(df)
   test <- cor.test(df_clean$spy, df_clean$btc, method = "pearson")
   return(data.frame(Scenario = label, N = nrow(df_clean), Correlation = round(test$estimate, 4), P_Value = format.pval(test$p.value, digits=3)))
 }
 
-# Baseline residuals
 res_base <- analyze_correlation(clean_data, "1. Baseline")
 
-# MCAR 
-# Delete 15% of SPY data, I guess this is like a packet loss in downloading the data from the internet
-# This implies no bias, just loss of sample size
-
-
+# MCAR
 mcar_data <- clean_data; mcar_data$spy[sample(nrow(mcar_data), 0.15*nrow(mcar_data))] <- NA
 res_mcar <- analyze_correlation(mcar_data, "2. MCAR")
 
 # MNAR
-# For MNAR, we delete 80% of the bottom 10% of SPY returns
-
-# Identify the bottom 10% of SPY returns (crashes)
 mnar_data <- clean_data; thresh <- quantile(mnar_data$spy, 0.10, na.rm=TRUE)
 mnar_data$spy[which(mnar_data$spy < thresh)[sample(sum(mnar_data$spy < thresh, na.rm=TRUE), 0.8*sum(mnar_data$spy < thresh, na.rm=TRUE))]] <- NA
 res_mnar <- analyze_correlation(mnar_data, "3. MNAR")

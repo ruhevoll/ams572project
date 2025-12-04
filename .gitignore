@@ -67,3 +67,10 @@ report/report.aux
 *.synctex(busy)
 report/report.log
 *.aux
+*.snm
+*.out
+*.nav
+*.toc
+*.log
+*.aux
+*.gz

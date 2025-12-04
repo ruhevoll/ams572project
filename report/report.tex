@@ -30,16 +30,16 @@
 	Moreover, the meteoric rise in price per bitcoin has spawned a new class of digital assets called cryptocurrencies. 
 	Aside from Bitcoin, these cryptocurrencies follow one of two paradigms. The first paradigm describes coins that focus 
 	on improving some aspects of the technology such as energy efficiency, transaction speed, or added utility. These coins 
-	utilize their own blockchain networking structure leading to their name as “native coins”. The second type of coin attempts 
+	utilize their own blockchain networking structure leading to their name as “nativecoins”. The second type of coin attempts 
 	to capitalize on the speculation and excitement around Bitcoin’s price by creating eye-catching imitations. These coins use
 	existing blockchain networks and are often themed around a specific internet trend or personality to garner attention. In 
-	online circles, these types of coins have earned the title of “meme coin” as they make no novel improvements to the 
+	online circles, these types of coins have earned the title of “memecoin” as they make no novel improvements to the 
 	underlying structure.  
 
-	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying 
+	How do the price movements of Bitcoin proportionally affect Native or Meme-coins? Are investors more excited about the underlying 
 	technology powering digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel 
 	the motivation fueling the cryptocurrency boom. This is because of the dual purpose of currency, being a store-of-value and a mode 
-	of facilitating transactions. Both of these purposes benefit from the price being predictable and stable. If the meme coins are more 
+	of facilitating transactions. Both of these purposes benefit from the price being predictable and stable. If the memecoins are more 
 	sensitive to changes in Bitcoin, it highlights their use as a speculative asset. Likewise, this result highlights the utility of native
 	coins and investors bet on the underlying technological improvements. 
 
@@ -52,11 +52,11 @@
 	and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as an investment asset 
 	mirrors similar stocks in the digital sphere. 
 	
-	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying technology powering
+	How do the price movements of Bitcoin proportionally affect native or memecoins? Are investors more excited about the underlying technology powering
 	digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel the motivation fueling the
 	cryptocurrency boom. This is because of the dual purpose of currency, being a store-of-value and a mode of facilitating transactions. 
-	Both of these purposes benefit from the price being predictable and stable. If the meme coins are more sensitive to changes in Bitcoin, 
-	it highlights their use as a speculative asset. Likewise, this result highlights the utility of native coins and investors bet on the 
+	Both of these purposes benefit from the price being predictable and stable. If the memecoins are more sensitive to changes in Bitcoin, 
+	it highlights their use as a speculative asset. Likewise, this result highlights the utility of nativecoins and investors bet on the 
 	underlying technological improvements. 
 	
 	\subsection{Description of the Data}
@@ -64,7 +64,7 @@
 	The data for this analysis was imported from Yahoo Finance using the \texttt{quantmod} package in \texttt{R}. This data contains the date, daily opening price, daily high 
 	price, daily closing price, and daily volume for each asset specified. The range of dates collected for this analysis ranges from November 1, 2023
 	to November 18, 2025. This data was then transformed to isolate the log-daily returns over this time period. Additionally, a dummy variable was
-	added to categorize between the native coins and the meme coins. When combining the SPY and BTC data, non-trading days such as holidays and
+	added to categorize between the nativecoins and the memecoins. When combining the SPY and BTC data, non-trading days such as holidays and
 	weekends were removed. 
 	
 	\section{Background}
@@ -119,7 +119,7 @@
 		\label{eq:question2linreg}
 		\mathrm{Return}_{i,t} = \beta_0 + \beta_1 \mathrm{BTC}_t + \beta_2 \mathrm{Memecoin}_{i,t} + \beta_3 (\mathrm{BTC}_t \times \mathrm{Memecoin}_{i,t}) + \varepsilon_{i,t}. 
 	\end{equation}
-	We can interpret the coefficients in \autoref{eq:question2linreg} in the following way: $\beta_1$ can be viewed as the sensitivity of native coins to changes in the price of Bitcoin (notice that when $\mathrm{Memecoin}_i = 0$ for a nativecoin $i$, the slope of \autoref{eq:question2linreg} is simply $\beta_1$). Moreover, $\beta_3$ can be viewed as the \textit{difference} in sensitivity for memecoins versus nativecoins, since when $\mathrm{Memecoin}_i = 1$ for a memecoin, the slope is $\beta_1 + \beta_3$. With this in mind, if it turns out that $\beta_3 > 0$, we have that memecoins are more sensitive to the price of Bitcoin than nativecoins are. 
+	We can interpret the coefficients in \autoref{eq:question2linreg} in the following way: $\beta_1$ can be viewed as the sensitivity of nativecoins to changes in the price of Bitcoin (notice that when $\mathrm{Memecoin}_i = 0$ for a nativecoin $i$, the slope of \autoref{eq:question2linreg} is simply $\beta_1$). Moreover, $\beta_3$ can be viewed as the \textit{difference} in sensitivity for memecoins versus nativecoins, since when $\mathrm{Memecoin}_i = 1$ for a memecoin, the slope is $\beta_1 + \beta_3$. With this in mind, if it turns out that $\beta_3 > 0$, we have that memecoins are more sensitive to the price of Bitcoin than nativecoins are. 
 	
 	
 	In order to apply the linear regression analysis as in \autoref{eq:question2linreg}, which has the general form $Y = \beta_0 + \beta_1 X + \beta_2 Z + \beta_3 XZ$, we require the following conditions to be satisfied by $X, Z,$ and the interaction term $XZ$: 
@@ -184,23 +184,23 @@
 			\caption{Growth of \$1.00 USD invested in S\&P 500 vs. Bitcoin from November 1, 2023 - November 18, 2025}
 			\label{fig:myFigure}
 		\end{figure}
-		To explore the relationship between daily returns of BTC with native coins and memecoins we started with scatterplots of individual coin returns against BTC along with their fitted linear regression lines. For native coins, we display this relationship in \autoref{fig:BTCvNative} below.
+		To explore the relationship between daily returns of BTC with nativecoins and memecoins we started with scatterplots of individual coin returns against BTC along with their fitted linear regression lines. For nativecoins, we display this relationship in \autoref{fig:BTCvNative} below.
 		\begin{figure}[H]
 			\centering
 			\includegraphics[scale = 0.5]{q2_3_native_grid_scatter.png}
-			\caption{Scatter plots of individual native coin returns against BTC along with their fitted linear regression lines.}
+			\caption{Scatter plots of individual nativecoin returns against BTC along with their fitted linear regression lines.}
 			\label{fig:BTCvNative}
 		\end{figure}
-		Across the native coins (ADA, ATOM, AVAX, DOT, ETH, LINK, LTC, SOL, XRP), the returns show a strong positive correlation with BTC. The scatterplots show relatively tight clustering around the fitted regression lines, and the slopes are uniformly positive. This suggests that native coins respond in a similar way to market movements of BTC. For memecoins, we display their relationship with BTC in \autoref{fig:BTCvMeme} below. 
+		Across the nativecoins (ADA, ATOM, AVAX, DOT, ETH, LINK, LTC, SOL, XRP), the returns show a strong positive correlation with BTC. The scatterplots show relatively tight clustering around the fitted regression lines, and the slopes are uniformly positive. This suggests that nativecoins respond in a similar way to market movements of BTC. For memecoins, we display their relationship with BTC in \autoref{fig:BTCvMeme} below. 
 		\begin{figure}[H]
 			\centering
 			\includegraphics[scale = 0.5]{q2_4_meme_grid_scatter.png}
 			\caption{Scatter plots of individual memecoin returns against BTC along with their fitted linear regression lines.}
 			\label{fig:BTCvMeme}
 		\end{figure}
-		The memecoin group (BONK, DOGE, FLOKI, MEME, SHIB) displays noticeably higher dispersion in returns and weaker alignment with BTC movements. While the fitted slopes remain positive for all tokens, the magnitude of the slopes is generally smaller than that observed for native coins, and the returns are more scattered. This suggests that memecoin prices are less attached to the broader crypto-market factor represented by BTC. These tokens appear to exhibit higher volatility. This volatility is often driven by community activity, speculative flows, and social-media-induced demand surges. Even where some memecoins (DOGE) show moderately strong BTC sensitivity, the noise around the fitted line remains substantially larger relative to native coins.
+		The memecoin group (BONK, DOGE, FLOKI, MEME, SHIB) displays noticeably higher dispersion in returns and weaker alignment with BTC movements. While the fitted slopes remain positive for all tokens, the magnitude of the slopes is generally smaller than that observed for nativecoins, and the returns are more scattered. This suggests that memecoin prices are less attached to the broader crypto-market factor represented by BTC. These tokens appear to exhibit higher volatility. This volatility is often driven by community activity, speculative flows, and social-media-induced demand surges. Even where some memecoins (DOGE) show moderately strong BTC sensitivity, the noise around the fitted line remains substantially larger relative to nativecoins.
 		
-		Overall this leads us to the idea that native coins exhibit stronger, more stable, and more linear sensitivity to BTC, whereas meme coins demonstrate weaker systematic exposure and substantially greater volatility. Native coins behave more like assets grounded in platform fundamentals, while memecoins resemble speculative instruments whose return profiles are heavily influenced by other speculative factors rather than market-wide factors. This motivates our deeper dive in question 2.
+		Overall this leads us to the idea that nativecoins exhibit stronger, more stable, and more linear sensitivity to BTC, whereas memecoins demonstrate weaker systematic exposure and substantially greater volatility. Nativecoins behave more like assets grounded in platform fundamentals, while memecoins resemble speculative instruments whose return profiles are heavily influenced by other speculative factors rather than market-wide factors. This motivates our deeper dive in question 2.
 		
 	\section{Analysis \& Results}
 		\subsection{Question 1}
@@ -277,7 +277,7 @@
 		\subsection{Question 2}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
-			\textbf{Question 2: } \textbf{\textit{Do memecoins follow the price changes of Bitcoin more than native coins?}}
+			\textbf{Question 2: } \textbf{\textit{Do memecoins follow the price changes of Bitcoin more than nativecoins?}}
 		\end{tcolorbox}
 		To answer this question, we use the multiple linear regression model with interaction that was first shown in \autoref{eq:question2linreg}: 
 			\begin{equation}
@@ -288,7 +288,7 @@
 		\begin{equation*}
 			\mathrm{Memecoin}_i = \begin{cases}1 & \text{if coin } i \text{ is a memecoin}, \\ 0 & \text{if coin } i \text{ is a nativecoin}.\end{cases}
 		\end{equation*}
-		Then, for each coin (indexed by $j = 1, \dots, 14$, 9 native coins, 5 meme coins), we compute  the test statistic from \autoref{eq:mlsTest}: $$t_j = \frac{\hat{\beta}_j}{\sqrt{\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}}$$ where we recall that  $\widehat{\mathrm{Var}}_{\mathrm{NW}}$ is the \textbf{Newey-West estimator} of the covariance matrix of $\widehat{\boldsymbol \beta}$ given in \autoref{eq:neweyWest}. 
+		Then, for each coin (indexed by $j = 1, \dots, 14$, 9 nativecoins, 5 memecoins), we compute  the test statistic from \autoref{eq:mlsTest}: $$t_j = \frac{\hat{\beta}_j}{\sqrt{\widehat{\mathrm{Var}}_{\mathrm{NW}}(\widehat{\boldsymbol \beta})}}$$ where we recall that  $\widehat{\mathrm{Var}}_{\mathrm{NW}}$ is the \textbf{Newey-West estimator} of the covariance matrix of $\widehat{\boldsymbol \beta}$ given in \autoref{eq:neweyWest}. 
 		
 		Now, with regard to \autoref{eq:question2linreg2}, our hypothesis test is as follows:
 		\begin{equation}
@@ -300,7 +300,7 @@
 		To run this test, we must make the following assumptions about our data:
 			\begin{enumerate}
 				\item There must be linearity in the parameters. This is a reasonable assumption as all cryptocurrencies involved share an asset class. This assumption can be visually checked in the Residuals vs. Fitted plot. 
-				\item There must be homoskedasticity in the data. This assumption is also likely to be violated due to how financial data exhibits periods of higher and lower volatility. Additionally, meme coins often rely on social-media driven marketing to attract new traders. This is likely to cause periods of much higher volatility over the short term. To mitigate this violation, we will use heteroskedasticity-robust standard errors as discussed. This assumption is visualized in the Scale-Location plot. 
+				\item There must be homoskedasticity in the data. This assumption is also likely to be violated due to how financial data exhibits periods of higher and lower volatility. Additionally, memecoins often rely on social-media driven marketing to attract new traders. This is likely to cause periods of much higher volatility over the short term. To mitigate this violation, we will use heteroskedasticity-robust standard errors as discussed. This assumption is visualized in the Scale-Location plot. 
 				\item There must be independence of the errors. This means that there cannot be any autocorrelation. As stated before, this is reasonable to assume due to the efficient market hypothesis. 
 				\item The errors must be normally distributed. The distribution of the residuals are likely to showcase fat-tail behavior similar to the returns. This assumption is visually checked in the QQ-Residuals plot.
 			\end{enumerate}
@@ -347,22 +347,22 @@
 		
 		\subsubsection{Question 2 Hypothesis Test Results}
 		
-		Therefore, after coding the hypothesis test in \autoref{eq:question2hyp}, we obtained a value for $\beta_3 = 0.4473$ at a $p$ value less than $2\times 10^{-16}$. Therefore, we \textbf{strongly reject the null hypothesis} $H_0: \beta_3 = 0$ and conclude that there is very strong statistical evidence suggesting that memecoins are more heavily levered on Bitcoin than native coins are. 
+		Therefore, after coding the hypothesis test in \autoref{eq:question2hyp}, we obtained a value for $\beta_3 = 0.4473$ at a $p$ value less than $2\times 10^{-16}$. Therefore, we \textbf{strongly reject the null hypothesis} $H_0: \beta_3 = 0$ and conclude that there is very strong statistical evidence suggesting that memecoins are more heavily levered on Bitcoin than nativecoins are. 
 		\subsubsection{The Effect of Missing Values for Question 1}
 		
 		\paragraph{MCAR} (Missing Completely At Random). To look at the effect of random missing values on our hypothesis test in \autoref{eq:question2hyp}, we wanted to see what would happen to our hypothesis test results of we randomly deleted 20\% of memecoin returns. Memecoins, as their name suggests, are just patently not serious coins, and can have weak infrastructure making data transmission unreliable. Deleting 20\% of memecoin returns can reflect a simple packet loss in data transmission over the internet, say, between a user and the crypto trading platform.
 		
 		
-		So, in the case of this MCAR test, we obtained a value of $\beta_{3, \mathrm{MCAR}} = 0.4665$ at a $p$-value still less than $2 \times 10^{-16}$. So, even in the case of deleting 20\% of memecoin return data, we still strongly reject the null hypothesis. This makes sense when looking at our untampered hypothesis test. The correlation between memecoins and Bitcoin is so strong, that we can conclude that memecoins are, compared to native coins, proportionally more sensitive to price changes in bitcoin. So, even if we deleted a continuous window of data, we would still see this effect. 
+		So, in the case of this MCAR test, we obtained a value of $\beta_{3, \mathrm{MCAR}} = 0.4665$ at a $p$-value still less than $2 \times 10^{-16}$. So, even in the case of deleting 20\% of memecoin return data, we still strongly reject the null hypothesis. This makes sense when looking at our untampered hypothesis test. The correlation between memecoins and Bitcoin is so strong, that we can conclude that memecoins are, compared to nativecoins, proportionally more sensitive to price changes in bitcoin. So, even if we deleted a continuous window of data, we would still see this effect. 
 		
-		\paragraph{MNAR} (Missing Not At Random). In terms of the effect of non-random missing values in the crypto data,  we decided to take a similar approach to our MNAR analysis of first question. Here, we first wrote \texttt{R} code to identify the lowest 5\% of memecoin returns, and delete 90\% of those observations. Again, this is reflective of a real-world event where holders of memecoins "panic sell", perhaps on news that the owner of that particular memecoin is about to "pull the rug"\footnote{"Pulling the rug" in crypto refers to when the developers of a particular coin suddenly liquidate all of the coin's value. This crashes the price to zero, and all other investors lose all of their money}. In this case, the results of our hypothesis test change somewhat significantly, and we end up with a coefficient of $\beta_{3, \mathrm{MNAR}} = 0.2213$ at a $p$-value of  $3.41 \times 10^{-10}$. So, in this case, while we still strongly reject $H_0$, our new coefficient value says that memecoin is only \textbf{\textit{half}} as levered as in the original hypothesis test (which gave us $\beta_3 = 0.4473$). Conceptually, this makes sense,  for similar reasons as discussed in the MNAR analysis for question 1: the leverage of one asset on another is strongly revealed when one asset crashes and another follows suit simultaneously; if that data is removed, the effect will no longer be observed. In this MNAR analysis, we are targeting an event (a crash in the memecoin price) that is most likely to reveal heavy leaverage on BTC or not. Now, despite a lower $\beta_3$ value, we still see that outside of crashes memecoins are strongly levered on BTC, more than native coins. 
+		\paragraph{MNAR} (Missing Not At Random). In terms of the effect of non-random missing values in the crypto data,  we decided to take a similar approach to our MNAR analysis of first question. Here, we first wrote \texttt{R} code to identify the lowest 5\% of memecoin returns, and delete 90\% of those observations. Again, this is reflective of a real-world event where holders of memecoins "panic sell", perhaps on news that the owner of that particular memecoin is about to "pull the rug"\footnote{"Pulling the rug" in crypto refers to when the developers of a particular coin suddenly liquidate all of the coin's value. This crashes the price to zero, and all other investors lose all of their money}. In this case, the results of our hypothesis test change somewhat significantly, and we end up with a coefficient of $\beta_{3, \mathrm{MNAR}} = 0.2213$ at a $p$-value of  $3.41 \times 10^{-10}$. So, in this case, while we still strongly reject $H_0$, our new coefficient value says that memecoin is only \textbf{\textit{half}} as levered as in the original hypothesis test (which gave us $\beta_3 = 0.4473$). Conceptually, this makes sense,  for similar reasons as discussed in the MNAR analysis for question 1: the leverage of one asset on another is strongly revealed when one asset crashes and another follows suit simultaneously; if that data is removed, the effect will no longer be observed. In this MNAR analysis, we are targeting an event (a crash in the memecoin price) that is most likely to reveal heavy leaverage on BTC or not. Now, despite a lower $\beta_3$ value, we still see that outside of crashes memecoins are strongly levered on BTC, more than nativecoins. 
 	\section{Conclusion}
 	In this report, we examined two questions dealing with cryptocurrencies. The first question was whether or not Bitcoin's daily log returns had similar price movements as those of the S\&P 500. What we found was a statistically significant correlation, albeit somewhat weak, between BTC and the S\&P 500. This suggests that Bitcoin is not wholly independent of traditional markets. Our MCAR and MNAR tests that, even with the loss of data, this statistically significant correlation remains.
 	
 	
 	The second question was a study into whether "meme" coins respond more strongly to Bitcoin's price movements as compared to traditional, well-known "native" coins. We found the answer to this question to be in the affirmative after running a multiple linear regression with interaction. To our surprise, not only was the result statistically significant, but it was \textit{strongly} so, as even with MCAR and MNAR tests we obtained extremely small $p$-values for the estimates of the regression coefficients. 
 	
-	Our approach is not without its limitations. As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been native coins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 
+	Our approach is not without its limitations. As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been nativecoins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 
 	
 	This selection bias highlights the deviations in risk between coins that is unrelated to the movements of other coins. Additionally, it stresses the need for more study in determining what other factors (market capitalization, founder’s social media presence, etc.) influence the price movements of cryptocurrencies as well as more empirical and academic ways to classify subgroups of this asset class. 
 	\bibliographystyle{unsrt} 

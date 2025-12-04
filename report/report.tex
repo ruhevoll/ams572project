@@ -268,7 +268,10 @@
 		
 		
 		The results of our MCAR stress test our reassuring. Given that many firms use the internet to access live market data, packet loss can cause some of that data to never be received. Therefore, the results of our MCAR test show that even with a sizable portion of missing data, the results of our statistical inferences still hold. 
-		\paragraph{MNAR}
+		\paragraph{MNAR} (Missing Not at Random). To look at the effect of non-random missing values in the S\&P 500 return data, instead of deleting a random 15\% batch of return data, we instead \textbf{deleted 10\% of the bottom 10\% of S\&P 500 returns}. One might wonder when this would happen in real life. In the case of a market crash, many investors will be sending in sell orders to liquidate their stock and cut their losses. Such flooding of orders over the internet can potentially cause a server overload and subsequent crash to online stock trading platforms so that traders do receive little, if any, data about stock prices during a crash. 
+		
+		
+		So, in the case of this MNAR analysis, our re-estimation of the Pearson correlation coefficient $\hat{\rho}_{\mathrm{MNAR}}$ when 80\% of the bottom 10\% of S\&P 500 returns are deleted was computed to be $\hat{\rho}_{\mathrm{MNAR}} = 0.2795$ with a $p$-value of $1.37 \times 10^{-9}$. While this is still far smaller than our $\alpha$-level of 0.05, it is \textbf{7 orders of magnitude} greater than our base $p$-value for the hypothesis test on the full data.  So, while we still reject $H_0$ strongly at the 95\% confidence level, the higher $p$-value still matches with our understanding of how BTC tracks with the S\&P. Sharp rises or falls for a given asset happening in sync with another asset is, on its own, strong evidence of correlation between those two assets. Therefore, if one asset experiences a sharp drop, while there is no data (being missing or otherwise) showing a sharp drop during that same instance in time, there will be that much less evidence of correlation between the two. 
 		
 		
 		\subsection{Question 2}

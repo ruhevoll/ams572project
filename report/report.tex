@@ -8,6 +8,8 @@
 \doublespace
 \usepackage{graphicx}
 \usepackage{tcolorbox}
+\usepackage{tocbibind}
+\usepackage{cite}
 \title{\textbf{AMS 572 Project Report}}
 \author{Benjamin Minkin, Marcus Minutello, Jacob White}
 \date{Due: December 5, 2025 \@ 10:00am}
@@ -17,13 +19,13 @@
 	\tableofcontents
 	\newpage 
 	\section{Introduction}
-	\textbf{\textcolor{red}{TODO (Jacob): Format bibliography w/ links to sources}} Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
-	investment asset. This digital currency is held by major hedge  funds[1], Fortune 500 companies[2],
-	and national banks[3]. Additionally, Bitcoin has gained acceptance as an everyday currency with many
+	Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
+	investment asset. This digital currency is held by major hedge  funds \cite{reuters2025hedge}, Fortune 500 companies \cite{wsj2021tesla},
+	and national banks \cite{elpais2023elsalvador}. Additionally, Bitcoin has gained acceptance as an everyday currency with many
 	retailers now accepting it as payment. Most incredibly, Bitcoin was even declared a legal-tender currency
-	of El Salvador in September 2021[4]. As Bitcoin has become more accepted, retail investors calmored to buy 
-	and trade this new asset. Today, you can hold Bitcoin in digital wallets, investment and retirement accounts[5],
-	as well as purchasing shares of Bitcoin-focused exchange-traded funds (ETFs)[6].
+	of El Salvador in September 2021 \cite{elysium_companies}. As Bitcoin has become more accepted, retail investors calmored to buy 
+	and trade this new asset. Today, you can hold Bitcoin in digital wallets, investment and retirement accounts \cite{fidelity_crypto_ira},
+	as well as purchasing shares of Bitcoin-focused exchange-traded funds (ETFs) \cite{wsj2021etf}.
 	
 	Moreover, the meteoric rise in price per bitcoin has spawned a new class of digital assets called cryptocurrencies. 
 	Aside from Bitcoin, these cryptocurrencies follow one of two paradigms. The first paradigm describes coins that focus 
@@ -80,8 +82,8 @@
 	An example of a financial time series (i.e., the daily return of the S\&P 500 stock market index), its daily return \& daily log return time series is shown in \autoref{fig:SPYdaily} below. 
 	\begin{figure}[H]
 		\centering 
-		\includegraphics[scale = 0.5]{572_SPY_daily.png}
-		\caption{S\&P 500 Daily Returns, Daily Log Returns, and Closing Prices between Nov 1, 2020 and Nov 18, 2025. \textbf{TODO( Jacob): Remake plot for Nov 1, 2023 - Nov 18, 2025}}
+		\includegraphics[scale = 0.5]{572_SP500_ret.png}
+		\caption{S\&P 500 Daily Returns, Daily Log Returns, and Closing Prices between Nov 1, 2023 and Nov 18, 2025.}
 		\label{fig:SPYdaily}
 	\end{figure}
 	In what follows, we will use analyze the price of different cryptocurrencies and financial assets using log returns as in \autoref{eq:logret}. 
@@ -306,7 +308,7 @@
 		Let's start with checking the first hypothesis, being that there is no linearity in the parameters. For this, we have the Residuals vs. Fitted values plot in \autoref{fig:residVsFit} below:
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale = 0.4]{q2_diag_residuals_vs_fitted.png}
+				\includegraphics[scale = 0.3]{q2_diag_residuals_vs_fitted.png}
 				\caption{Residuals vs. Fitted Plot.}
 				\label{fig:residVsFit}
 			\end{figure}
@@ -316,7 +318,7 @@
 		We already expect from the outset that the homoskedasticity assumption that is required for legacy multiple linear regression will not hold for our financial data, therefore requiring us to use the Newey-West heteroskedasticity-robust standard errors as discussed above. We visualize the lack of homoskedasticity in the \textit{scale-location} plot below, which illustrates the relationship between the fitted values and the variability of the residuals:
 			\begin{figure}[H]
 				\centering
-				\includegraphics[scale = 0.4]{q2_diag_scale_location.png}
+				\includegraphics[scale = 0.3]{q2_diag_scale_location.png}
 				\caption{Scale-Location plot of fitted values vs. residuals.} 
 				\label{fig:q2scale}
 			\end{figure}
@@ -336,7 +338,7 @@
 		
 		\begin{figure}[H]
 			\centering 
-			\includegraphics[scale = 0.4]{q2_diag_qqplot.png}
+			\includegraphics[scale = 0.3]{q2_diag_qqplot.png}
 			\caption{QQ plot of errors.}
 			\label{fig:q2qqplot}
 		\end{figure}
@@ -355,10 +357,12 @@
 		
 		\paragraph{MNAR} (Missing Not At Random). In terms of the effect of non-random missing values in the crypto data,  we decided to take a similar approach to our MNAR analysis of first question. Here, we first wrote \texttt{R} code to identify the lowest 5\% of memecoin returns, and delete 90\% of those observations. Again, this is reflective of a real-world event where holders of memecoins "panic sell", perhaps on news that the owner of that particular memecoin is about to "pull the rug"\footnote{"Pulling the rug" in crypto refers to when the developers of a particular coin suddenly liquidate all of the coin's value. This crashes the price to zero, and all other investors lose all of their money}. In this case, the results of our hypothesis test change somewhat significantly, and we end up with a coefficient of $\beta_{3, \mathrm{MNAR}} = 0.2213$ at a $p$-value of  $3.41 \times 10^{-10}$. So, in this case, while we still strongly reject $H_0$, our new coefficient value says that memecoin is only \textbf{\textit{half}} as levered as in the original hypothesis test (which gave us $\beta_3 = 0.4473$). Conceptually, this makes sense,  for similar reasons as discussed in the MNAR analysis for question 1: the leverage of one asset on another is strongly revealed when one asset crashes and another follows suit simultaneously; if that data is removed, the effect will no longer be observed. In this MNAR analysis, we are targeting an event (a crash in the memecoin price) that is most likely to reveal heavy leaverage on BTC or not. Now, despite a lower $\beta_3$ value, we still see that outside of crashes memecoins are strongly levered on BTC, more than native coins. 
 	\section{Conclusion}
-	\subsection{Limitations of Our Approach}
-	As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been native coins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 
+	
+	
+	Our approach is not without its limitations. As noted above, the time-series nature of this financial data requires us to relax assumptions of the models employed. Despite our best efforts in mitigating these violating characteristics, there will always be some level of autocorrelation and non-stationarity in this data. On this note, the data range of two years represents a small sliver of time relative to the long history of financial markets, which has undergone many fundamental shifts. Markets are ever-changing, and the results of this analysis may not have external validity when generalizing to future behaviors under different market conditions. A significant limitation of this study is survivorship bias associated with the selection of assets. New cryptocurrencies are created constantly, many of which have a short lifespan. These coins, often dubbed “sh-t coins,” never garnered enough prominence to reach our study. In a similar vein, there have been native coins that have lost all of their value. One prominent example is the FTX token of Sam Bankman-Fried’s FTX cryptocurrency exchange. This token has lost 99\% of its value from its peak valuation and is at risk of being completely liquidated to pay creditors during the ongoing bankruptcy proceedings. 
 	
 	This selection bias highlights the deviations in risk between coins that is unrelated to the movements of other coins. Additionally, it stresses the need for more study in determining what other factors (market capitalization, founder’s social media presence, etc.) influence the price movements of cryptocurrencies as well as more empirical and academic ways to classify subgroups of this asset class. 
-	\bibliographystyle{plain} 
+	\bibliographystyle{unsrt} 
+	\newpage 
 	\bibliography{references}
 \end{document}

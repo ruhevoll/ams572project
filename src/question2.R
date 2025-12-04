@@ -1,4 +1,4 @@
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))  # ensure correct working directory
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))  # Set working directory to current file location
 
 library(quantmod)
 library(tidyverse)
@@ -20,14 +20,10 @@ meme_coins <- c("DOGE-USD", "SHIB-USD", "PEPE-USD", "WIF-USD", "BONK-USD",
                 "FLOKI-USD", "MEME-USD", "ELON-USD", "BABYDOGE-USD", "SAFEMOON-USD")
 btc_ticker <- "BTC-USD"
 
-# --------------------------------------------------------------------
-# MINIMAL EDIT: load stored CSV instead of downloading
-# Expecting columns: date, BTC-USD, ETH-USD, SOL-USD, ... etc.
-# --------------------------------------------------------------------
+# Load local data
 print("Loading stored CSV instead of downloading.")
 all_df <- read.csv("stored_q2_data.csv")
 all_df$date <- as.Date(all_df$date)
-# --------------------------------------------------------------------
 
 # Filter for Continuity
 limit <- 0.05 * nrow(all_df)

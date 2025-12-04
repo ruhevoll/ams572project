@@ -15,9 +15,7 @@ options(scipen = 999)
 # Creates directory in getwd() directory to store plots
 dir.create("project_plots", showWarnings = FALSE)
 
-# --------------------------------------------------------------------
-# MINIMAL EDIT: Load stored CSV instead of downloading with quantmod
-# --------------------------------------------------------------------
+# Load local data 
 print("Loading stored CSV instead of downloading.")
 raw_df <- read.csv("stored_q1_data.csv")
 

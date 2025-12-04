@@ -86,14 +86,33 @@ p5 <- ggplot(long_returns, aes(x = Asset, y = Log_Return, fill = Asset)) +
 ggsave("project_plots/q1_5_boxplot.png", plot = p5, width = 8, height = 6)
 
 # Diagnostic plots (for checking normality assumptions)
-png("project_plots/q1_6_diagnostics.png", width = 1000, height = 800)
-par(mfrow = c(2, 2))
-plot(clean_data$spy, clean_data$btc, main = "Linearity", pch=20, col=rgb(0,0,0,0.2)); abline(lm(btc~spy, clean_data), col="red")
-qqnorm(clean_data$spy, main = "Q-Q SPY"); qqline(clean_data$spy, col="red")
-qqnorm(clean_data$btc, main = "Q-Q BTC"); qqline(clean_data$btc, col="red")
+
+# Linearity
+png("project_plots/diag_linearity.png", width = 800, height = 600)
+plot(clean_data$spy, clean_data$btc,
+     main = "BTC vs SPY Log Returns",
+     xlab = "SPY Log Returns", ylab = "BTC Log Returns",
+     pch = 20, col = rgb(0,0,0,0.2))
+abline(lm(btc ~ spy, clean_data), col = "red")
+dev.off()
+
+# Q-Q Plot SPY
+png("project_plots/diag_qq_spy.png", width = 800, height = 600)
+qqnorm(clean_data$spy, main = "Q-Q SPY")
+qqline(clean_data$spy, col = "red")
+dev.off()
+
+# Q-Q Plot BTC
+png("project_plots/diag_qq_btc.png", width = 800, height = 600)
+qqnorm(clean_data$btc, main = "Q-Q BTC")
+qqline(clean_data$btc, col = "red")
+dev.off()
+
+# ACF for BTC
+png("project_plots/diag_acf_btc.png", width = 800, height = 600)
 acf(clean_data$btc, main = "ACF BTC")
 dev.off()
-par(mfrow = c(1, 1))
+
 
 print("Plots saved.")
 
@@ -126,3 +145,5 @@ mnar_data$spy[which(mnar_data$spy < thresh)[sample(sum(mnar_data$spy < thresh, n
 res_mnar <- analyze_correlation(mnar_data, "3. MNAR")
 
 print(rbind(res_base, res_mcar, res_mnar))
+print("Below is the correlation coefficient between BTC and SPY:")
+print(cor(clean_data$spy, clean_data$btc))

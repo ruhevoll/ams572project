@@ -8,7 +8,7 @@
 \contentsline {section}{\numberline {3}Exploratory Analysis of the Data}{11}{section.3}%
 \contentsline {section}{\numberline {4}Results}{14}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Question 1}{14}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}The Effect of Missing Values for Question 1}{14}{subsubsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.2}Question 2}{14}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}The Effect of Missing Values for Question 1}{14}{subsubsection.4.2.1}%
-\contentsline {section}{\numberline {5}Conclusion}{14}{section.5}%
+\contentsline {subsubsection}{\numberline {4.1.1}The Effect of Missing Values for Question 1}{15}{subsubsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.2}Question 2}{15}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}The Effect of Missing Values for Question 1}{16}{subsubsection.4.2.1}%
+\contentsline {section}{\numberline {5}Conclusion}{16}{section.5}%

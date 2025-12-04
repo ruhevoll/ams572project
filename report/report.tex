@@ -17,8 +17,8 @@
 	\tableofcontents
 	\newpage 
 	\section{Introduction}
-	Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
-	investment asset. This digital currency is held by major heads funds[1], Fortune 500 companies[2],
+	\textbf{\textcolor{red}{TODO (Jacob): Format bibliography w/ links to sources}} Nearly two decades since its introduction in 2009, Bitcoin has gained mainstream traction as an
+	investment asset. This digital currency is held by major hedge  funds[1], Fortune 500 companies[2],
 	and national banks[3]. Additionally, Bitcoin has gained acceptance as an everyday currency with many
 	retailers now accepting it as payment. Most incredibly, Bitcoin was even declared a legal-tender currency
 	of El Salvador in September 2021[4]. As Bitcoin has become more accepted, retail investors calmored to buy 
@@ -50,12 +50,6 @@
 
 	\subsection{Questions of Interest}
 	
-	Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, does Bitcoin’s price follow stock market
-	movements? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with traditional investments that it has lost its novelty? 
-	The answer to this question has serious ramifications for portfolio allocations. If Bitcoin’s movements are unrelated to the stock market, it can 
-	be a valuable tool to diversify portfolios and reduce risk. However, if Bitcoin’s price follows the movements of the stock market, its utility as 
-	an investment asset mirrors similar stocks in the digital sphere. 
-	
 	How do the price movements of Bitcoin proportionally affect Native or Meme coins? Are investors more excited about the underlying technology powering
 	digital assets or are they seeking an avenue to wildly speculate? The answer to this question will help unravel the motivation fueling the
 	cryptocurrency boom. This is because of the dual purpose of currency, being a store-of-value and a mode of facilitating transactions. 
@@ -65,7 +59,7 @@
 	
 	\subsection{Description of the Data}
 	
-	The data for this analysis was imported from Yahoo Finance using the quantmod r package. This data contains the date, daily opening price, daily high 
+	The data for this analysis was imported from Yahoo Finance using the \texttt{quantmod} package in \texttt{R}. This data contains the date, daily opening price, daily high 
 	price, daily closing price, and daily volume for each asset specified. The range of dates collected for this analysis ranges from November 1, 2023
 	to November 18, 2025. This data was then transformed to isolate the log-daily returns over this time period. Additionally, a dummy variable was
 	added to categorize between the native coins and the meme coins. When combining the SPY and BTC data, non-trading days such as holidays and
@@ -184,13 +178,37 @@
 		\subsection{Question 1}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
-			\textbf{Question 1: } Due to its mainstream adoption in traditional financial markets by both institutional and retail investors, \textit{\textbf{does Bitcoin’s price follow stock market movements}} (in particular, the S\&P 500)? Is Bitcoin truly a new investment asset, or is its price so deeply entangled with traditional investments that it has lost its novelty?
+			\textbf{Question 1: } \textbf{\textit{Does Bitcoin's price movements follow those of the S\&P 500}}? 
 		\end{tcolorbox}
+		
+		The plot in \autoref{fig:correlationBTCvsSPY} below assesses linearity and is meant to show that model errors have a mean of zero. 
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale = 0.4]{diag_linearity.png}
+			\caption{Plot of BTC vs. SPY returns with regression line. (Correlation coefficient: $\hat{\rho} \approx 0.343.$ )}
+			\label{fig:correlationBTCvsSPY}
+		\end{figure}
+		
+		The residuals are clustered around zero implying that modeling log returns can be done using a linear approximation. There are noticeable outliers at the extreme fitter values of -.2 and .2. This is expected in crypto data since they are a volatile asset. These extreme points perhaps suggest that some coins or days had large returns relative to BTC. 
+		
+		The Q–Q plots for SPY and BTC log returns in \autoref{fig:qqSPYBTC} below reveal important differences and similarities in their distributions relative to a normal distribution. For both assets, the mid-quantiles lie close to the theoretical line. This suggests the bulk of the return distribution is approximately symmetric and only moderately non-normal. However it is apparent that the points deviate from the straight line in both the lower and upper extremes. This indicates that both BTC and SPY returns are more heavy-tailed than a Normal distribution.
+		\begin{figure}[H]
+			\centering
+			\begin{tabular}{cc}
+				\includegraphics[scale = 0.27]{diag_qq_btc.png} & \includegraphics[scale = 0.27]{diag_qq_spy.png}
+			\end{tabular}
+			\caption{\textbf{Left}: Q-Q Plot of BTC returns. \textbf{Right}: Q-Q plot of SPY returns.}
+			\label{fig:qqSPYBTC}
+		\end{figure}
+		The BTC Q–Q plot shows a bit more curvature at the extremes, especially on the right tail, where several points rise slightly further from the line. There are one or two returns that stand further above the line than any corresponding point in SPY’s Q–Q plot. These are individual observations and do represent a fundamentally different distributional shape
+		
+		Overall, the Q–Q plots for BTC and SPY look quite similar, showing the typical heavy-tailed structure of financial returns. Both assets depart from normality in broadly the same way. While Bitcoin exhibits slightly stronger tail deviations the difference is modest. This small difference could imply that BTC is slightly more volatile than SPY. 
 		\subsubsection{The Effect of Missing Values for Question 1}
 		\subsection{Question 2}
 		Recall that our first question of study is the following: 
 		\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black]
-			\textbf{Question 2: } How do the price movements of Bitcoin proportionally affect native or meme coins? In particular, \textbf{\textit{are meme coins more affected by the changes in the value of Bitcoin than native coins are?}}
+			\textbf{Question 2: } \textbf{\textit{Are memecoins follow the price changes of Bitcoin more than native coins?}}
 		\end{tcolorbox}
 		\subsubsection{The Effect of Missing Values for Question 1}
 	\section{Conclusion}

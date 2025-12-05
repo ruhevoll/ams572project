@@ -1,11 +1,11 @@
 \contentsline {section}{Contents}{2}{section*.1}%
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Questions of Interest}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.1}Questions of Interest}{3}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Description of the Data}{4}{subsection.1.2}%
-\contentsline {section}{\numberline {2}Background}{5}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Introduction to Financial Time Series}{5}{subsection.2.1}%
+\contentsline {section}{\numberline {2}Background}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Introduction to Financial Time Series}{4}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Inference for the Correlation between Time Series}{6}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Linear Regression on Financial Time Series}{8}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.3}Linear Regression on Financial Time Series}{7}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Autocorrelation}{11}{subsection.2.4}%
 \contentsline {section}{\numberline {3}Exploratory Analysis of the Data}{13}{section.3}%
 \contentsline {section}{\numberline {4}Analysis \& Results}{16}{section.4}%

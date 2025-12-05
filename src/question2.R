@@ -24,6 +24,7 @@ btc_ticker <- "BTC-USD"
 print("Loading stored CSV instead of downloading.")
 all_df <- read.csv("stored_q2_data.csv")
 all_df$date <- as.Date(all_df$date)
+all_df <- all_df %>% filter(date >= as.Date("2023-11-01") & date <= as.Date("2025-11-18"))
 
 # Filter for Continuity
 limit <- 0.05 * nrow(all_df)
@@ -104,7 +105,7 @@ p7 <- ggplot(final_data, aes(x=is_memecoin, y=log_return_coin, fill=is_memecoin)
   labs(title="7. Return Distribution", subtitle="Wider violin = Fatter Tails") + theme_minimal()
 ggsave("project_plots/q2_7_violin.png", plot=p7, width=8, height=6)
 
-# BASELINE MODEL (unchanged)
+# Baseline model, not assuming Newey-West
 baseline_model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = final_data)
 
 # Diagnostics
@@ -133,20 +134,42 @@ run_mlr <- function(df, label) {
 }
 
 # Baseline / MCAR / MNAR
-res_base <- run_mlr(final_data, "1. Baseline")
-mcar <- final_data; meme_i <- which(mcar$is_memecoin=="Memecoin"); mcar$log_return_coin[sample(meme_i, 0.2*length(meme_i))] <- NA
-res_mcar <- run_mlr(mcar, "2. MCAR")
-mnar <- final_data; thr <- quantile(mnar$log_return_coin, 0.05); crash <- which(mnar$is_memecoin=="Memecoin" & mnar$log_return_coin < thr)
-mnar$log_return_coin[sample(crash, 0.9*length(crash))] <- NA
-res_mnar <- run_mlr(mnar, "3. MNAR")
+run_mlr_hac <- function(df, label) {
+  df <- na.omit(df)
+  if (length(levels(factor(df$is_memecoin))) < 2) return(NULL)
+  
+  model <- lm(log_return_coin ~ log_return_btc * is_memecoin, data = df)
+  hac_test <- coeftest(model, vcov = vcovHAC(model))
+  
+  int_row <- hac_test[grep(":", rownames(hac_test)), ]
+  
+  return(data.frame(
+    Scenario = label,
+    Beta = round(int_row[1], 4),
+    P = format.pval(int_row[4], digits = 3)
+  ))
+}
 
-print("--- Simulation Results ---")
+res_base <- run_mlr_hac(final_data, "1. Baseline")
+
+mcar <- final_data
+meme_i <- which(mcar$is_memecoin=="Memecoin")
+mcar$log_return_coin[sample(meme_i, 0.2*length(meme_i))] <- NA
+res_mcar <- run_mlr_hac(mcar, "2. MCAR")
+
+mnar <- final_data
+thr <- quantile(mnar$log_return_coin, 0.05)
+crash <- which(mnar$is_memecoin=="Memecoin" & mnar$log_return_coin < thr)
+mnar$log_return_coin[sample(crash, 0.9*length(crash))] <- NA
+res_mnar <- run_mlr_hac(mnar, "3. MNAR")
+
+print("--- Simulation Results (NEWEY–WEST HAC) ---")
 print(rbind(res_base, res_mcar, res_mnar))
 
 # HAC Standard Errors
 robust_test <- coeftest(baseline_model, vcov = vcovHAC(baseline_model))
 int_row <- robust_test[grep(":", rownames(robust_test)), ]
 
-print("--- Comparison of Interaction Term ---")
-print(paste("Original P-Value:", format.pval(summary(baseline_model)$coefficients[4,4], digits=3)))
-print(paste("Robust P-Value:  ", format.pval(int_row[4], digits=3)))
+print("--- Comparison of Interaction Terms: ---")
+print(paste("Original P-Value (Original MLS p value, just for comparison):", format.pval(summary(baseline_model)$coefficients[4,4], digits=3)))
+print(paste("Newey-West P-Value (What we actually used):  ", format.pval(int_row[4], digits=3)))

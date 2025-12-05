@@ -21,6 +21,7 @@ raw_df <- read.csv("stored_q1_data.csv")
 
 # Expecting columns: date, spy, btc
 raw_df$date <- as.Date(raw_df$date)
+raw_df <- raw_df %>% filter(date >= as.Date("2023-11-01") & date <= as.Date("2025-11-18"))
 
 log_returns <- xts(raw_df[, c("spy", "btc")], order.by = raw_df$date)
 colnames(log_returns) <- c("spy", "btc")
@@ -127,5 +128,3 @@ mnar_data$spy[which(mnar_data$spy < thresh)[sample(sum(mnar_data$spy < thresh, n
 res_mnar <- analyze_correlation(mnar_data, "3. MNAR")
 
 print(rbind(res_base, res_mcar, res_mnar))
-print("Below is the correlation coefficient between BTC and SPY:")
-print(cor(clean_data$spy, clean_data$btc))
